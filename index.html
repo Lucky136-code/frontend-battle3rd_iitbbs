@@ -31,6 +31,38 @@
       <div class="glow-orb glow-orb-3"></div>
     </div>
 
+    <!-- Custom Cursor elements -->
+    <div class="custom-cursor" id="custom-cursor"></div>
+    <div class="custom-cursor-dot" id="custom-cursor-dot"></div>
+
+    <!-- Parallax Background Node Elements -->
+    <div class="parallax-bg-element parallax-node-1" id="parallax-node-1" aria-hidden="true">
+      <svg width="240" height="240" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="120" cy="120" r="100" stroke="rgba(255, 200, 1, 0.12)" stroke-width="1.5" stroke-dasharray="6 6"/>
+        <circle cx="120" cy="120" r="60" stroke="rgba(217, 232, 226, 0.08)" stroke-width="1.5"/>
+        <circle cx="120" cy="20" r="6" fill="var(--forsythia)" />
+        <circle cx="220" cy="120" r="4" fill="var(--deep-saffron)" />
+        <path d="M120 20 L120 220" stroke="rgba(217, 232, 226, 0.05)" stroke-width="1"/>
+        <path d="M20 120 L220 120" stroke="rgba(217, 232, 226, 0.05)" stroke-width="1"/>
+      </svg>
+    </div>
+    <div class="parallax-bg-element parallax-node-2" id="parallax-node-2" aria-hidden="true">
+      <svg width="180" height="300" viewBox="0 0 180 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10 50 Q 90 150, 170 250" stroke="rgba(217, 232, 226, 0.08)" stroke-width="2" stroke-dasharray="4 8" />
+        <circle cx="10" cy="50" r="6" fill="var(--mystic-mint)"/>
+        <circle cx="90" cy="150" r="8" fill="var(--nocturnal-expedition)" stroke="var(--forsythia)" stroke-width="1.5"/>
+        <circle cx="170" cy="250" r="6" fill="var(--deep-saffron)"/>
+      </svg>
+    </div>
+    <div class="parallax-bg-element parallax-node-3" id="parallax-node-3" aria-hidden="true">
+      <svg width="300" height="200" viewBox="0 0 300 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M30 150 L 150 50 L 270 150" stroke="rgba(255, 200, 1, 0.08)" stroke-width="2" />
+        <circle cx="150" cy="50" r="10" fill="rgba(17, 76, 90, 0.4)" stroke="var(--forsythia)" stroke-width="2"/>
+        <circle cx="30" cy="150" r="5" fill="var(--mystic-mint)"/>
+        <circle cx="270" cy="150" r="5" fill="var(--mystic-mint)"/>
+      </svg>
+    </div>
+
     <!-- Cyber Grid Overlay and Scroll Navigation -->
     <div class="bg-grid-overlay" aria-hidden="true"></div>
     <div class="scroll-nav" aria-label="Section Navigation">
@@ -101,7 +133,7 @@
           </div>
 
           <!-- Rolling Stat Metrics (Apple / Sony style) -->
-          <div class="hero-stats">
+          <div class="hero-stats scroll-reveal">
             <div class="stat-item">
               <div class="stat-num-row">
                 <span class="stat-number" id="stat-accuracy" data-target="99.99">0.00</span>
@@ -133,7 +165,7 @@
           </div>
 
           <!-- Interactive Developer IDE Window Dashboard -->
-          <div class="ide-mockup glass tilt-card">
+          <div class="ide-mockup glass tilt-card scroll-reveal">
             <div class="ide-header">
               <div class="ide-controls">
                 <span class="dot dot-red"></span>
@@ -248,7 +280,7 @@
           <!-- Desktop Bento Grid -->
           <div class="bento-grid" id="desktop-bento">
             <!-- Card 0: Auto Synthesis -->
-            <div class="bento-card glass tilt-card active" data-index="0" id="bento-card-0">
+            <div class="bento-card glass tilt-card active scroll-reveal" data-index="0" id="bento-card-0">
               <div class="bento-icon-box">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
                   <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"/>
@@ -269,7 +301,7 @@
             </div>
             
             <!-- Card 1: Anomaly Quarantine -->
-            <div class="bento-card glass tilt-card" data-index="1" id="bento-card-1">
+            <div class="bento-card glass tilt-card scroll-reveal" data-index="1" id="bento-card-1">
               <div class="bento-icon-box">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
                   <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
@@ -294,7 +326,7 @@
             </div>
             
             <!-- Card 2: Edge Replication -->
-            <div class="bento-card glass tilt-card" data-index="2" id="bento-card-2">
+            <div class="bento-card glass tilt-card scroll-reveal" data-index="2" id="bento-card-2">
               <div class="bento-icon-box">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
                   <path fill="currentColor" fill-rule="evenodd" d="M19.902 4.098a3.75 3.75 0 0 0-5.304 0l-4.5 4.5a3.75 3.75 0 0 0 1.035 6.037a.75.75 0 0 1-.646 1.353a5.25 5.25 0 0 1-1.449-8.45l4.5-4.5a5.25 5.25 0 1 1 7.424 7.424l-1.757 1.757a.75.75 0 1 1-1.06-1.06l1.757-1.757a3.75 3.75 0 0 0 0-5.304Zm-7.389 4.267a.75.75 0 0 1 1-.353a5.25 5.25 0 0 1 1.449 8.45l-4.5 4.5a5.25 5.25 0 1 1-7.424-7.424l1.757-1.757a.75.75 0 1 1 1.06 1.06l-1.757 1.757a3.75 3.75 0 1 0 5.304 5.304l4.5-4.5a3.75 3.75 0 0 0-1.035-6.037a.75.75 0 0 1-.354-1Z" clip-rule="evenodd"/>
@@ -326,7 +358,7 @@
           <!-- Mobile Accordion (Visible <= 768px) -->
           <div class="accordion-wrapper" id="mobile-accordion">
             <!-- Accordion Item 0 -->
-            <div class="accordion-item active" data-index="0" id="accordion-item-0">
+            <div class="accordion-item active scroll-reveal" data-index="0" id="accordion-item-0">
               <div class="accordion-header">
                 <div class="accordion-title-block">
                   <div class="accordion-icon-box">
@@ -348,7 +380,7 @@
             </div>
 
             <!-- Accordion Item 1 -->
-            <div class="accordion-item" data-index="1" id="accordion-item-1">
+            <div class="accordion-item scroll-reveal" data-index="1" id="accordion-item-1">
               <div class="accordion-header">
                 <div class="accordion-title-block">
                   <div class="accordion-icon-box">
@@ -373,7 +405,7 @@
             </div>
 
             <!-- Accordion Item 2 -->
-            <div class="accordion-item" data-index="2" id="accordion-item-2">
+            <div class="accordion-item scroll-reveal" data-index="2" id="accordion-item-2">
               <div class="accordion-header">
                 <div class="accordion-title-block">
                   <div class="accordion-icon-box">
@@ -436,7 +468,7 @@
           <!-- Pricing Grid -->
           <div class="pricing-grid">
             <!-- Tier 1: Developer -->
-            <div class="pricing-card glass tilt-card" id="pricing-card-developer">
+            <div class="pricing-card glass tilt-card scroll-reveal" id="pricing-card-developer">
               <h3>Developer</h3>
               <p class="pricing-card-desc">For testing pipelines, small prototypes, and developer sandboxes.</p>
               
@@ -468,7 +500,7 @@
             </div>
 
             <!-- Tier 2: Scale (Popular) -->
-            <div class="pricing-card glass popular tilt-card" id="pricing-card-scale">
+            <div class="pricing-card glass popular tilt-card scroll-reveal" id="pricing-card-scale">
               <span class="card-popular-badge">Most Popular</span>
               <h3>Scale</h3>
               <p class="pricing-card-desc">For growing startups and production engineering clusters.</p>
@@ -505,7 +537,7 @@
             </div>
 
             <!-- Tier 3: Enterprise -->
-            <div class="pricing-card glass tilt-card" id="pricing-card-enterprise">
+            <div class="pricing-card glass tilt-card scroll-reveal" id="pricing-card-enterprise">
               <h3>Enterprise</h3>
               <p class="pricing-card-desc">For heavy enterprise workflows needing custom validation.</p>
               
@@ -602,7 +634,7 @@
 
           <!-- Testimonials -->
           <div class="testimonials-grid">
-            <div class="testimonial-card glass tilt-card">
+            <div class="testimonial-card glass tilt-card scroll-reveal">
               <p class="testimonial-text">"With Aether.AI, our pipeline configuration file went from 1,200 lines of manual YAML to absolute zero. Schemas auto-synthesize instantly."</p>
               <div class="testimonial-author">
                 <div class="author-avatar" aria-hidden="true">JD</div>
@@ -613,7 +645,7 @@
               </div>
             </div>
             
-            <div class="testimonial-card glass tilt-card">
+            <div class="testimonial-card glass tilt-card scroll-reveal">
               <p class="testimonial-text">"The performance is astonishing. Standardizing schema checks at the edge reduced our database load by 45%. Real-time anomalies are isolated cleanly."</p>
               <div class="testimonial-author">
                 <div class="author-avatar" aria-hidden="true">AR</div>
@@ -624,7 +656,7 @@
               </div>
             </div>
 
-            <div class="testimonial-card glass tilt-card">
+            <div class="testimonial-card glass tilt-card scroll-reveal">
               <p class="testimonial-text">"Syncing eventual consistency across edge nodes used to cost us hundreds of milliseconds. Aether's replication keeps nodes aligned in sub-millisecond ranges."</p>
               <div class="testimonial-author">
                 <div class="author-avatar" aria-hidden="true">MK</div>
@@ -647,7 +679,7 @@
             <p class="section-subtitle">Watch the structural layout transition, zero-render price switches, and accordion motion matching.</p>
           </div>
           
-          <div class="video-container glass tilt-card">
+          <div class="video-container glass tilt-card scroll-reveal">
             <video id="showcase-video" controls preload="metadata" aria-label="Aether.AI Platform Demo Video">
               <source src="/demo.mp4" type="video/mp4" />
               Your browser does not support the video tag.

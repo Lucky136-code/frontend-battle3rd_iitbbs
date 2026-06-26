@@ -1734,3 +1734,76 @@ body.active-section-demo .bg-grid-overlay {
     display: none;
   }
 }
+
+/* Custom Pointer Cursor styling */
+.custom-cursor {
+  width: 24px;
+  height: 24px;
+  background: rgba(255, 200, 1, 0.15);
+  border: 1.5px solid var(--forsythia);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 10000;
+  transform: translate(-50%, -50%);
+  transition: transform 80ms cubic-bezier(0.16, 1, 0.3, 1), background-color 200ms var(--ease-micro), border-color 200ms var(--ease-micro);
+}
+
+.custom-cursor-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--forsythia);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 10001;
+  transform: translate(-50%, -50%);
+}
+
+/* Hide default cursor on desktop device screens */
+@media (pointer: fine) {
+  body {
+    cursor: none;
+  }
+  a, button, select, input, .ide-tab, .cycle-option, .accordion-header {
+    cursor: none;
+  }
+}
+
+/* Parallax Background Elements */
+.parallax-bg-element {
+  position: absolute;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.7;
+  will-change: transform;
+}
+
+.parallax-node-1 {
+  top: 15%;
+  right: 6%;
+}
+
+.parallax-node-2 {
+  top: 48%;
+  left: 4%;
+}
+
+.parallax-node-3 {
+  top: 80%;
+  right: 5%;
+}
+
+/* 3D Entry Animations on Scroll */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(50px) rotateX(8deg) scale(0.97);
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+  transition: opacity 1000ms var(--ease-micro), transform 1000ms var(--ease-micro);
+}
+
+.scroll-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0px) rotateX(0deg) scale(1);
+}

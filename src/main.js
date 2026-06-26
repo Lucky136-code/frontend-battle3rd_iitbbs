@@ -593,4 +593,110 @@ document.addEventListener('DOMContentLoaded', () => {
   sections.forEach(section => {
     observer.observe(section);
   });
+
+  /* ==========================================================================
+     3D Content Reveal on Scroll
+     ========================================================================== */
+  const revealElements = document.querySelectorAll('.scroll-reveal');
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('revealed');
+        // Once revealed, we don't need to observe it anymore
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, {
+    root: null,
+    rootMargin: '0px 0px -8% 0px', // Trigger slightly before entering viewport fully
+    threshold: 0.05
+  });
+
+  revealElements.forEach(el => {
+    revealObserver.observe(el);
+  });
+
+  /* ==========================================================================
+     Custom Mouse Cursor Glow Pointer & Parallax Scroll Effects
+     ========================================================================== */
+  const cursor = document.getElementById('custom-cursor');
+  const cursorDot = document.getElementById('custom-cursor-dot');
+  
+  let mouseCoords = { x: -100, y: -100 };
+  let cursorCoords = { x: -100, y: -100 };
+  let cursorDotCoords = { x: -100, y: -100 };
+  let isHovered = false;
+
+  window.addEventListener('mousemove', (e) => {
+    mouseCoords.x = e.clientX;
+    mouseCoords.y = e.clientY;
+  });
+
+  // Track hover states for links and buttons to expand cursor
+  const hoverableSelector = 'a, button, select, input, .ide-tab, .cycle-option, .accordion-header';
+  
+  function updateHoverListeners() {
+    const hoverables = document.querySelectorAll(hoverableSelector);
+    hoverables.forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        isHovered = true;
+        if (cursor) {
+          cursor.style.transform = 'translate(-50%, -50%) scale(1.6)';
+          cursor.style.backgroundColor = 'rgba(255, 200, 1, 0.05)';
+          cursor.style.borderColor = 'var(--deep-saffron)';
+        }
+      });
+      el.addEventListener('mouseleave', () => {
+        isHovered = false;
+        if (cursor) {
+          cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+          cursor.style.backgroundColor = 'rgba(255, 200, 1, 0.15)';
+          cursor.style.borderColor = 'var(--forsythia)';
+        }
+      });
+    });
+  }
+  updateHoverListeners();
+
+  // Custom Cursor Tick loop
+  function updateCursor() {
+    // Ease the cursor movement (0.15 interpolation speed)
+    cursorCoords.x += (mouseCoords.x - cursorCoords.x) * 0.15;
+    cursorCoords.y += (mouseCoords.y - cursorCoords.y) * 0.15;
+    
+    // Ease the center dot (0.35 interpolation speed for tight lag)
+    cursorDotCoords.x += (mouseCoords.x - cursorDotCoords.x) * 0.35;
+    cursorDotCoords.y += (mouseCoords.y - cursorDotCoords.y) * 0.35;
+
+    if (cursor) {
+      cursor.style.left = `${cursorCoords.x}px`;
+      cursor.style.top = `${cursorCoords.y}px`;
+    }
+    if (cursorDot) {
+      cursorDot.style.left = `${cursorDotCoords.x}px`;
+      cursorDot.style.top = `${cursorDotCoords.y}px`;
+    }
+
+    requestAnimationFrame(updateCursor);
+  }
+  requestAnimationFrame(updateCursor);
+
+  // Parallax Scroll calculations
+  const parallaxNode1 = document.getElementById('parallax-node-1');
+  const parallaxNode2 = document.getElementById('parallax-node-2');
+  const parallaxNode3 = document.getElementById('parallax-node-3');
+
+  window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
+    
+    if (parallaxNode1) {
+      parallaxNode1.style.transform = `translateY(${scrollY * 0.18}px) rotate(${scrollY * 0.015}deg)`;
+    }
+    if (parallaxNode2) {
+      parallaxNode2.style.transform = `translateY(${scrollY * -0.12}px) rotate(${scrollY * -0.01}deg)`;
+    }
+    if (parallaxNode3) {
+      parallaxNode3.style.transform = `translateY(${scrollY * 0.1}px) rotate(${scrollY * 0.005}deg)`;
+    }
+  });
 });

@@ -1037,6 +1037,169 @@ function init() {
       speakActiveDialogue();
     });
   }
+
+  /* ==========================================================================
+     Animated Stats Counter (count-up on scroll-into-view)
+     ========================================================================== */
+  const statEls = document.querySelectorAll('.stat-number[data-count]');
+
+  function animateCounter(el) {
+    const target = parseFloat(el.dataset.count);
+    const decimals = parseInt(el.dataset.decimals || '0');
+    const suffix = el.dataset.suffix || '';
+    const prefix = el.dataset.prefix || '';
+    const duration = 1800;
+    const start = performance.now();
+
+    // Special case: data-count=0 means we just display the prefix immediately
+    if (target === 0) {
+      el.textContent = prefix + suffix;
+      return;
+    }
+
+    el.classList.add('counting');
+    function step(now) {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3); // ease-out-cubic
+      const current = eased * target;
+      el.textContent = prefix + current.toFixed(decimals) + suffix;
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      } else {
+        el.textContent = prefix + target.toFixed(decimals) + suffix;
+        el.classList.remove('counting');
+      }
+    }
+    requestAnimationFrame(step);
+  }
+
+  const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        animateCounter(entry.target);
+        counterObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.4 });
+
+  statEls.forEach(el => counterObserver.observe(el));
+
+  /* ==========================================================================
+     Typewriter Cycling Text on Hero
+     ========================================================================== */
+  const typewriterEl = document.getElementById('typewriter-text');
+  if (typewriterEl) {
+    const words = ['Pipeline AI', 'Edge Sync', 'Auto-Schema', 'Zero Latency', 'Data Velocity'];
+    let wordIdx = 0;
+    let charIdx = 0;
+    let deleting = false;
+
+    function typeStep() {
+      const word = words[wordIdx];
+      if (deleting) {
+        charIdx--;
+        typewriterEl.textContent = word.slice(0, charIdx);
+        if (charIdx === 0) {
+          deleting = false;
+          wordIdx = (wordIdx + 1) % words.length;
+          setTimeout(typeStep, 400);
+          return;
+        }
+        setTimeout(typeStep, 55);
+      } else {
+        charIdx++;
+        typewriterEl.textContent = word.slice(0, charIdx);
+        if (charIdx === word.length) {
+          deleting = true;
+          setTimeout(typeStep, 1800);
+          return;
+        }
+        setTimeout(typeStep, 95);
+      }
+    }
+    setTimeout(typeStep, 2400);
+  }
+
+  /* ==========================================================================
+     Live Terminal Feed (Demo Section)
+     ========================================================================== */
+  const terminalBody = document.getElementById('terminal-body');
+  if (terminalBody) {
+    const terminalLogs = [
+      { text: '[NODE-01] Edge cluster initialized. Schema engine ready.', cls: 't-green', delay: 600 },
+      { text: '[INGEST ] Receiving payload: user_events_batch_20240626.json', cls: '', delay: 1400 },
+      { text: '[SCHEMA ] Auto-synthesizing validation schema... ', cls: 't-cyan', delay: 2200 },
+      { text: '[SCHEMA ] ✓ Schema generated: 147 fields validated in 0.8ms', cls: 't-green', delay: 3100 },
+      { text: '[ANOMALY] Scanning 12,400 records for structural drift...', cls: 't-yellow', delay: 4000 },
+      { text: '[ANOMALY] ⚠ 3 anomalous records quarantined → sandbox_b7f2', cls: 't-red', delay: 4900 },
+      { text: '[REPLICATE] Broadcasting to 24 edge nodes...', cls: 't-cyan', delay: 5800 },
+      { text: '[NODE-07] ✓ Synced  [NODE-12] ✓ Synced  [NODE-19] ✓ Synced', cls: 't-green', delay: 6600 },
+      { text: '[PERF   ] Replication complete. Max latency: 0.74ms', cls: 't-green', delay: 7400 },
+      { text: '[INGEST ] Next batch queued: user_events_batch_20240627.json', cls: '', delay: 8200 },
+      { text: '── Pipeline cycle complete. Zero downtime. Zero thrashing. ──', cls: 't-yellow', delay: 9000 },
+    ];
+
+    let terminalStarted = false;
+
+    function startTerminal() {
+      if (terminalStarted) return;
+      terminalStarted = true;
+      terminalLogs.forEach(({ text, cls, delay }) => {
+        setTimeout(() => {
+          const line = document.createElement('p');
+          line.className = `terminal-line ${cls}`;
+          line.textContent = text;
+          terminalBody.appendChild(line);
+          terminalBody.scrollTop = terminalBody.scrollHeight;
+
+          // Loop the feed after the last log
+          if (delay === terminalLogs[terminalLogs.length - 1].delay) {
+            setTimeout(() => {
+              // Clear and restart
+              while (terminalBody.children.length > 1) {
+                terminalBody.removeChild(terminalBody.lastChild);
+              }
+              terminalStarted = false;
+              startTerminal();
+            }, 3500);
+          }
+        }, delay);
+      });
+    }
+
+    const terminalObserver = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) startTerminal();
+    }, { threshold: 0.3 });
+
+    terminalObserver.observe(document.getElementById('live-terminal'));
+  }
+
+  /* ==========================================================================
+     Mobile Hamburger Menu
+     ========================================================================== */
+  const hamburger = document.getElementById('hamburger-btn');
+  const mobileNav = document.getElementById('mobile-nav-overlay');
+  const mobileClose = document.getElementById('mobile-nav-close');
+  const mobileLinks = document.querySelectorAll('.mobile-nav-link, .mobile-nav-cta');
+
+  function openNav() {
+    mobileNav.removeAttribute('hidden');
+    hamburger.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeNav() {
+    mobileNav.setAttribute('hidden', '');
+    hamburger.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  }
+
+  if (hamburger && mobileNav) {
+    hamburger.addEventListener('click', openNav);
+    mobileClose.addEventListener('click', closeNav);
+    mobileLinks.forEach(link => link.addEventListener('click', closeNav));
+    mobileNav.addEventListener('click', (e) => { if (e.target === mobileNav) closeNav(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeNav(); });
+  }
 }
 
 if (document.readyState === 'loading') {

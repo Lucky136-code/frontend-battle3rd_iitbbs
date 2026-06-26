@@ -31,6 +31,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   </head>
   <body>
+    <!-- Accessibility: Skip to Main Content -->
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
     <!-- Intro Splash Screen Loader -->
     <div id="intro-loader">
       <div class="loader-content">
@@ -124,9 +127,25 @@
           <a href="#pricing" class="btn btn-launch-dapp">
             <span class="dapp-dots">••</span> DEPLOY PIPELINE
           </a>
+          <!-- Mobile Hamburger -->
+          <button class="hamburger-btn" id="hamburger-btn" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobile-nav-overlay">
+            <span></span><span></span><span></span>
+          </button>
         </div>
       </div>
     </header>
+
+    <!-- Mobile Navigation Overlay -->
+    <div id="mobile-nav-overlay" role="dialog" aria-modal="true" aria-label="Mobile navigation" hidden>
+      <button class="mobile-nav-close" id="mobile-nav-close" aria-label="Close navigation">&times;</button>
+      <nav>
+        <a href="#features" class="mobile-nav-link">Features</a>
+        <a href="#pricing" class="mobile-nav-link">Pricing</a>
+        <a href="#testimonials" class="mobile-nav-link">Reviews</a>
+        <a href="#demo" class="mobile-nav-link">Demo</a>
+        <a href="#pricing" class="btn btn-primary mobile-nav-cta">Deploy Pipeline</a>
+      </nav>
+    </div>
 
     <main id="main-content">
       
@@ -169,7 +188,8 @@
               <span class="unleash-text">UNLEASH THE POWER OF</span>
               <div class="blockchain-ai-glow">
                 <div class="gradient-border-mask"></div>
-                <span class="glow-text">Pipeline AI</span>
+                <!-- Typewriter cycling text -->
+                <span class="glow-text" id="typewriter-text">Pipeline AI</span>
               </div>
             </div>
           </div>
@@ -234,22 +254,27 @@
         </div>
       </section>
 
-      <!-- Highlight Banner Section (Nocturnal Expedition #114C5A themed) -->
-      <section class="highlight-strip-banner" style="background-color: var(--nocturnal-expedition); color: var(--arctic-powder); padding: 40px 0; border: none; position: relative; z-index: 10;">
-        <div class="container" style="display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap; gap: 24px; text-align: center;">
-          <div style="flex: 1; min-width: 250px;">
-            <h4 style="font-family: var(--font-mono); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--forsythia); margin-bottom: 6px;">COMPLIANCE VERIFIED</h4>
-            <p style="color: var(--arctic-powder); font-size: 1.05rem; font-weight: 700; line-height: 1.4;">Zero-Dependency Architecture</p>
+      <!-- Animated Stats Counter Strip -->
+      <section class="highlight-strip-banner" aria-label="Platform statistics">
+        <div class="container stats-strip">
+          <div class="stat-item">
+            <span class="stat-number" data-count="24" data-suffix=" Nodes">0 Nodes</span>
+            <span class="stat-label">GLOBAL EDGE</span>
           </div>
-          <div style="width: 1px; height: 40px; background-color: var(--oceanic-noir);" class="strip-divider"></div>
-          <div style="flex: 1; min-width: 250px;">
-            <h4 style="font-family: var(--font-mono); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--forsythia); margin-bottom: 6px;">PERFORMANCE CRITERIA</h4>
-            <p style="color: var(--arctic-powder); font-size: 1.05rem; font-weight: 700; line-height: 1.4;">Sub-Millisecond Edge Syncing</p>
+          <div class="stat-divider" aria-hidden="true"></div>
+          <div class="stat-item">
+            <span class="stat-number" data-count="99.99" data-suffix="% Uptime" data-decimals="2">0% Uptime</span>
+            <span class="stat-label">SLA GUARANTEED</span>
           </div>
-          <div style="width: 1px; height: 40px; background-color: var(--oceanic-noir);" class="strip-divider"></div>
-          <div style="flex: 1; min-width: 250px;">
-            <h4 style="font-family: var(--font-mono); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--forsythia); margin-bottom: 6px;">STATE ISOLATION</h4>
-            <p style="color: var(--arctic-powder); font-size: 1.05rem; font-weight: 700; line-height: 1.4;">0% Layout Thrashing Guarantee</p>
+          <div class="stat-divider" aria-hidden="true"></div>
+          <div class="stat-item">
+            <span class="stat-number" data-count="0" data-suffix="ms Sync" data-prefix="<1">0ms Sync</span>
+            <span class="stat-label">SUB-MILLISECOND</span>
+          </div>
+          <div class="stat-divider" aria-hidden="true"></div>
+          <div class="stat-item">
+            <span class="stat-number" data-count="1200" data-suffix=" YAML Lines" data-prefix="-">0 YAML Lines</span>
+            <span class="stat-label">ELIMINATED</span>
           </div>
         </div>
       </section>
@@ -671,20 +696,32 @@
         </div>
       </section>
 
-      <!-- Video Showcase Section -->
+      <!-- Demo / Live Terminal Section -->
       <section id="demo" class="demo-section">
         <div class="container">
           <div class="section-header">
             <span class="section-tag">Interactive Preview</span>
             <h2 class="section-title">See the Speed Run in Action</h2>
-            <p class="section-subtitle">Watch the structural layout transition, zero-render price switches, and accordion motion matching.</p>
+            <p class="section-subtitle">Watch Aether.AI process live pipeline events in real-time. Every log line below is synthesized at the edge.</p>
           </div>
-          
-          <div class="video-container glass tilt-card scroll-reveal">
-            <video id="showcase-video" controls preload="metadata" aria-label="Aether.AI Platform Demo Video">
-              <source src="/demo.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
+
+          <!-- Live Terminal Feed -->
+          <div class="terminal-window glass scroll-reveal" id="live-terminal" aria-label="Live pipeline terminal feed" role="log" aria-live="polite">
+            <div class="terminal-titlebar" aria-hidden="true">
+              <span class="terminal-dot t-red"></span>
+              <span class="terminal-dot t-yellow"></span>
+              <span class="terminal-dot t-green"></span>
+              <span class="terminal-title">aether-pipeline — live feed</span>
+            </div>
+            <div class="terminal-body" id="terminal-body">
+              <p class="terminal-line t-dim">$ aether start --mode=edge --nodes=24 --schema=auto</p>
+            </div>
+          </div>
+
+          <div style="text-align:center; margin-top: 40px;">
+            <a href="#pricing" class="btn btn-primary" style="font-size:1.05rem; padding: 16px 40px;">
+              <span class="dapp-dots">⚡</span> Deploy Your Pipeline Now
+            </a>
           </div>
         </div>
       </section>

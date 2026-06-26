@@ -612,6 +612,15 @@ document.addEventListener('DOMContentLoaded', () => {
     threshold: 0.05
   });
 
+  // Set up staggered delays inside grids for a synchronized motion entry
+  const revealContainers = document.querySelectorAll('.bento-grid, .pricing-grid, .testimonials-grid, .accordion-wrapper');
+  revealContainers.forEach(container => {
+    const cards = container.querySelectorAll('.scroll-reveal');
+    cards.forEach((card, idx) => {
+      card.style.transitionDelay = `${idx * 120}ms`;
+    });
+  });
+
   revealElements.forEach(el => {
     revealObserver.observe(el);
   });

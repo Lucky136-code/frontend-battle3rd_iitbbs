@@ -1,0 +1,688 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- SEO Hygiene Metadata -->
+    <title>Aether.AI | Next-Gen AI Data Ingestion & Pipeline Orchestration</title>
+    <meta name="description" content="Deploy autonomous, edge-replicated AI data validation and ingestion pipelines with sub-millisecond latency. Zero manual mapping, completely serverless." />
+    <meta name="keywords" content="AI data pipeline, edge database, real-time ingestion, schema synthesis, developer SaaS, data automation" />
+    
+    <!-- Open Graph (OG) Tags -->
+    <meta property="og:title" content="Aether.AI | Next-Gen AI Data Ingestion & Pipeline Orchestration" />
+    <meta property="og:description" content="Deploy autonomous, edge-replicated AI data validation pipelines. Sub-millisecond schema synthesis and routing." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/favicon.svg" />
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    
+    <!-- Google Fonts: Inter and JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <!-- Premium Neon Glow Background Orbs -->
+    <div class="bg-glow-container" aria-hidden="true">
+      <div class="glow-orb glow-orb-1"></div>
+      <div class="glow-orb glow-orb-2"></div>
+      <div class="glow-orb glow-orb-3"></div>
+    </div>
+
+    <!-- Glassmorphic Navigation -->
+    <header class="nav-header" id="main-header">
+      <div class="container nav-container">
+        <a href="#hero" class="logo-link" id="nav-logo" aria-label="Aether.AI home">
+          <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24" aria-hidden="true">
+            <path fill="currentColor" d="M8.372 1.349a.75.75 0 0 0-.744 0l-4.81 2.748L8 7.131l5.182-3.034zM14 5.357L8.75 8.43v6.005l4.872-2.784A.75.75 0 0 0 14 11zm-6.75 9.078V8.43L2 5.357V11c0 .27.144.518.378.651z"/>
+          </svg>
+          <span>Aether.AI</span>
+        </a>
+        
+        <nav class="nav-links" aria-label="Main Navigation">
+          <a href="#features">Features</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#testimonials">Reviews</a>
+          <a href="#demo">Demo</a>
+        </nav>
+        
+        <div class="header-actions">
+          <div class="select-wrapper">
+            <select class="currency-select" id="currency-select" aria-label="Change currency">
+              <option value="USD">USD ($)</option>
+              <option value="EUR">EUR (€)</option>
+              <option value="INR">INR (₹)</option>
+            </select>
+            <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m19.5 8.25l-7.5 7.5l-7.5-7.5"/>
+            </svg>
+          </div>
+          
+          <a href="#pricing" class="btn btn-primary">Get Started</a>
+        </div>
+      </div>
+    </header>
+
+    <main id="main-content">
+      
+      <!-- Hero Section -->
+      <section class="hero-section" id="hero">
+        <!-- Interactive Mouse-Tracking Particle Canvas -->
+        <canvas id="hero-canvas"></canvas>
+
+        <div class="container">
+          <div class="hero-badge">
+            <span class="badge-dot"></span>
+            <span>Early Access Beta Live</span>
+          </div>
+          
+          <h1 class="hero-title">Automate raw data streams. <span>Instantly.</span></h1>
+          
+          <p class="hero-subtitle">
+            Aether.AI compiles, validates, and routes multi-dimensional data pipelines at the edge. 
+            Zero configuration. Sub-millisecond latency. Engineered for modern developers.
+          </p>
+          
+          <div class="hero-ctas">
+            <a href="#pricing" class="btn btn-primary">Deploy Pipeline Free</a>
+            <a href="#demo" class="btn btn-secondary">Watch Showcase Demo</a>
+          </div>
+
+          <!-- Rolling Stat Metrics (Apple / Sony style) -->
+          <div class="hero-stats">
+            <div class="stat-item">
+              <div class="stat-num-row">
+                <span class="stat-number" id="stat-accuracy" data-target="99.99">0.00</span>
+                <span class="stat-unit">%</span>
+              </div>
+              <span class="stat-label">Ingestion Accuracy</span>
+            </div>
+            <div class="stat-divider" aria-hidden="true"></div>
+            <div class="stat-item">
+              <div class="stat-num-row">
+                <span class="stat-number" id="stat-sla" data-target="0.18">0.00</span>
+                <span class="stat-unit">ms</span>
+              </div>
+              <span class="stat-label">Average Ingestion SLA</span>
+            </div>
+            <div class="stat-divider" aria-hidden="true"></div>
+            <div class="stat-item">
+              <div class="stat-num-row">
+                <span class="stat-number" id="stat-replicas" data-target="24">0</span>
+              </div>
+              <span class="stat-label">Edge Node Replicas</span>
+            </div>
+          </div>
+
+          <!-- Countdown Timer -->
+          <div class="countdown-box">
+            <span class="countdown-label">Beta Speed Run Window Closes In</span>
+            <span class="countdown-digits" id="countdown-timer">00:00:00:00</span>
+          </div>
+
+          <!-- Interactive Developer IDE Window Dashboard -->
+          <div class="ide-mockup glass tilt-card">
+            <div class="ide-header">
+              <div class="ide-controls">
+                <span class="dot dot-red"></span>
+                <span class="dot dot-yellow"></span>
+                <span class="dot dot-green"></span>
+              </div>
+              <div class="ide-tabs">
+                <div class="ide-tab active" id="tab-editor" data-panel="editor">
+                  <svg class="ide-tab-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"><path d="M8.372 1.349a.75.75 0 0 0-.744 0l-4.81 2.748L8 7.131l5.182-3.034zM14 5.357L8.75 8.43v6.005l4.872-2.784A.75.75 0 0 0 14 11zm-6.75 9.078V8.43L2 5.357V11c0 .27.144.518.378.651z"/></svg>
+                  <span>aether_pipeline.js</span>
+                </div>
+                <div class="ide-tab" id="tab-logs" data-panel="logs">
+                  <svg class="ide-tab-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                  <span>live_stream.log</span>
+                </div>
+              </div>
+              <div class="ide-status">
+                <span class="status-indicator"></span>
+                <span>STATUS: NOMINAL</span>
+              </div>
+            </div>
+            
+            <div class="ide-body">
+              <!-- Left Pane (Editor / Terminal) -->
+              <div class="ide-left-pane" style="flex: 1; display: flex; flex-direction: column; min-height: 250px;">
+                <!-- Code Editor Panel (Tab 1) -->
+                <div class="code-panel" id="panel-editor">
+                  <div class="code-line"><span class="code-comment">// Aether.AI Auto-Ingest Schema Synthesis Definition</span></div>
+                  <div class="code-line"><span class="code-keyword">import</span> { AetherClient } <span class="code-keyword">from</span> <span class="code-string">'@aether/edge'</span>;</div>
+                  <div class="code-line"><span class="code-keyword">const</span> client = <span class="code-keyword">new</span> <span class="code-fn">AetherClient</span>({ token: process.env.AETHER_SECRET });</div>
+                  <div class="code-line">&nbsp;</div>
+                  <div class="code-line"><span class="code-keyword">export default</span> client.<span class="code-fn">synthesize</span>({</div>
+                  <div class="code-line">&nbsp;&nbsp;source: <span class="code-string">'kafka://events.telemetry.io'</span>,</div>
+                  <div class="code-line">&nbsp;&nbsp;partition: <span class="code-string">'geo-edge-us'</span>,</div>
+                  <div class="code-line">&nbsp;&nbsp;strategy: <span class="code-string">'dynamic-auto-schema'</span>,</div>
+                  <div class="code-line">&nbsp;&nbsp;validation: <span class="code-keyword">async</span> (payload) =&gt; {</div>
+                  <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// Live Anomaly Quarantine Filter Guard</span></div>
+                  <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">if</span> (!payload.device_id || payload.throughput &gt; <span class="code-number">10000</span>) {</div>
+                  <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">return</span> <span class="code-fn">quarantine</span>(payload, <span class="code-string">'Structural Anomaly'</span>);</div>
+                  <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;}</div>
+                  <div class="code-line">&nbsp;&nbsp;}</div>
+                  <div class="code-line">});</div>
+                </div>
+                
+                <!-- Console Logs Panel (Tab 2, Hidden by default) -->
+                <div class="terminal-panel" id="panel-logs" style="display: none;">
+                  <!-- Dynamically populated in main.js -->
+                </div>
+              </div>
+
+              <!-- Right Diagnostics Panel -->
+              <div class="health-dashboard" id="ide-health">
+                <h4>Diagnostics</h4>
+                <div class="health-metric">
+                  <span class="health-label">Edge Cluster</span>
+                  <span class="health-val">US-WEST-2</span>
+                </div>
+                <div class="health-metric">
+                  <span class="health-label">Latency</span>
+                  <span class="health-val" id="health-latency">0.18ms</span>
+                </div>
+                <div class="health-metric">
+                  <span class="health-label">CPU Load</span>
+                  <span class="health-val" id="health-cpu">4.2%</span>
+                </div>
+                <div class="health-metric">
+                  <span class="health-label">Throughput</span>
+                  <div class="health-graph">
+                    <svg viewBox="0 0 100 40" preserveAspectRatio="none">
+                      <path class="graph-wave" id="graph-wave-path" d="M0,20 Q10,10 20,20 T40,20 T60,20 T80,20 T100,20" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FEATURE 2: Technical Feature Bento Grid (Desktop) -->
+      <section id="features">
+        <div class="container">
+          <div class="section-header">
+            <span class="section-tag">Core Engine Architecture</span>
+            <h2 class="section-title">Autonomous Edge Execution</h2>
+            <p class="section-subtitle">
+              A zero-dependency, edge-first infrastructure engineered to synthesize ingestion schemas 
+              and protect database state consistency under high transaction throughputs.
+            </p>
+          </div>
+
+          <!-- Desktop Bento Grid -->
+          <div class="bento-grid" id="desktop-bento">
+            <!-- Card 0: Auto Synthesis -->
+            <div class="bento-card glass tilt-card active" data-index="0" id="bento-card-0">
+              <div class="bento-icon-box">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+                  <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"/>
+                </svg>
+              </div>
+              <h3>Pipeline Auto-Synthesis</h3>
+              <p>AI automatically analyzes incoming raw JSON payloads and generates optimized validation schemas, eliminating manual ingestion mapping.</p>
+              
+              <!-- Animation Widget 1: Ingestion flow -->
+              <div class="bento-visual" aria-hidden="true">
+                <svg class="flow-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 80">
+                  <path class="flow-path" d="M20,40 C60,10 80,70 120,40 S140,10 180,40" fill="none" stroke="rgba(255, 200, 1, 0.4)" stroke-width="2"/>
+                  <circle class="node-circle" cx="20" cy="40" r="4" fill="#FFC801"/>
+                  <circle class="node-circle" cx="120" cy="40" r="4" fill="#FF9A32"/>
+                  <circle class="node-circle" cx="180" cy="40" r="4" fill="#10B981"/>
+                </svg>
+              </div>
+            </div>
+            
+            <!-- Card 1: Anomaly Quarantine -->
+            <div class="bento-card glass tilt-card" data-index="1" id="bento-card-1">
+              <div class="bento-icon-box">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+                  <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
+                    <path d="M10.343 3.94c.09-.542.56-.94 1.11-.94h1.093c.55 0 1.02.398 1.11.94l.149.894c.07.424.384.764.78.93c.398.164.855.142 1.205-.108l.737-.527a1.125 1.125 0 0 1 1.45.12l.773.774c.39.389.44 1.002.12 1.45l-.527.737c-.25.35-.272.806-.107 1.204c.165.397.505.71.93.78l.893.15c.543.09.94.56.94 1.109v1.094c0 .55-.397 1.02-.94 1.11l-.893.149c-.425.07-.765.383-.93.78c-.165.398-.143.854.107 1.204l.527.738c.32.447.269 1.06-.12 1.45l-.774.773a1.125 1.125 0 0 1-1.449.12l-.738-.527c-.35-.25-.806-.272-1.203-.107c-.397.165-.71.505-.781.929l-.149.894c-.09.542-.56.94-1.11.94h-1.094c-.55 0-1.019-.398-1.11-.94l-.148-.894c-.071-.424-.384-.764-.781-.93c-.398-.164-.854-.142-1.204.108l-.738.527c-.447.32-1.06.269-1.45-.12l-.773-.774a1.125 1.125 0 0 1-.12-1.45l.527-.737c.25-.35.273-.806.108-1.204c-.165-.397-.505-.71-.93-.78l-.894-.15c-.542-.09-.94-.56-.94-1.109v-1.094c0-.55.398-1.02.94-1.11l.894-.149c.424-.07.765-.383.93-.78c.165-.398.143-.854-.107-1.204l-.527-.738a1.125 1.125 0 0 1 .12-1.45l.773-.773a1.125 1.125 0 0 1 1.45-.12l.737.527c.35.25.807.272 1.204.107c.397-.165.71-.505.78-.929l.15-.894Z"/>
+                    <path d="M15 12a3 3 0 1 1-6 0a3 3 0 0 1 6 0Z"/>
+                  </g>
+                </svg>
+              </div>
+              <h3>Anomaly Quarantine</h3>
+              <p>Detects structural drift, schema changes, or invalid fields in real-time, instantly quarantining bad records to isolated sandboxes.</p>
+              
+              <!-- Animation Widget 2: Radar Scan -->
+              <div class="bento-visual" aria-hidden="true">
+                <svg class="flow-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 120">
+                  <circle cx="100" cy="60" r="45" class="radar-circle"/>
+                  <circle cx="100" cy="60" r="25" class="radar-circle"/>
+                  <circle cx="100" cy="60" r="5" fill="#FFC801"/>
+                  <circle cx="100" cy="60" r="45" class="radar-pulse"/>
+                  <line x1="100" y1="60" x2="135" y2="25" class="radar-line"/>
+                </svg>
+              </div>
+            </div>
+            
+            <!-- Card 2: Edge Replication -->
+            <div class="bento-card glass tilt-card" data-index="2" id="bento-card-2">
+              <div class="bento-icon-box">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+                  <path fill="currentColor" fill-rule="evenodd" d="M19.902 4.098a3.75 3.75 0 0 0-5.304 0l-4.5 4.5a3.75 3.75 0 0 0 1.035 6.037a.75.75 0 0 1-.646 1.353a5.25 5.25 0 0 1-1.449-8.45l4.5-4.5a5.25 5.25 0 1 1 7.424 7.424l-1.757 1.757a.75.75 0 1 1-1.06-1.06l1.757-1.757a3.75 3.75 0 0 0 0-5.304Zm-7.389 4.267a.75.75 0 0 1 1-.353a5.25 5.25 0 0 1 1.449 8.45l-4.5 4.5a5.25 5.25 0 1 1-7.424-7.424l1.757-1.757a.75.75 0 1 1 1.06 1.06l-1.757 1.757a3.75 3.75 0 1 0 5.304 5.304l4.5-4.5a3.75 3.75 0 0 0-1.035-6.037a.75.75 0 0 1-.354-1Z" clip-rule="evenodd"/>
+                </svg>
+              </div>
+              <h3>Global Edge Replication</h3>
+              <p>Maintains high-speed eventual consistency across 24 edge nodes, keeping pipelines synced globally with zero database lock delays.</p>
+              
+              <!-- Animation Widget 3: Server Grid Ping -->
+              <div class="bento-visual" aria-hidden="true">
+                <div class="ping-grid-layout" id="ping-nodes-container">
+                  <span class="ping-node"></span>
+                  <span class="ping-node"></span>
+                  <span class="ping-node"></span>
+                  <span class="ping-node"></span>
+                  <span class="ping-node"></span>
+                  <span class="ping-node"></span>
+                  <span class="ping-node"></span>
+                  <span class="ping-node"></span>
+                  <span class="ping-node"></span>
+                  <span class="ping-node"></span>
+                  <span class="ping-node"></span>
+                  <span class="ping-node"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mobile Accordion (Visible <= 768px) -->
+          <div class="accordion-wrapper" id="mobile-accordion">
+            <!-- Accordion Item 0 -->
+            <div class="accordion-item active" data-index="0" id="accordion-item-0">
+              <div class="accordion-header">
+                <div class="accordion-title-block">
+                  <div class="accordion-icon-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                      <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"/>
+                    </svg>
+                  </div>
+                  <h3>Pipeline Auto-Synthesis</h3>
+                </div>
+                <svg class="accordion-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                  <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m19.5 8.25l-7.5 7.5l-7.5-7.5"/>
+                </svg>
+              </div>
+              <div class="accordion-content" style="max-height: 120px; opacity: 1;">
+                <div class="accordion-body">
+                  <p>AI automatically analyzes incoming raw JSON payloads and generates optimized validation schemas, eliminating manual ingestion mapping.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Accordion Item 1 -->
+            <div class="accordion-item" data-index="1" id="accordion-item-1">
+              <div class="accordion-header">
+                <div class="accordion-title-block">
+                  <div class="accordion-icon-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                      <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
+                        <path d="M10.343 3.94c.09-.542.56-.94 1.11-.94h1.093c.55 0 1.02.398 1.11.94l.149.894c.07.424.384.764.78.93c.398.164.855.142 1.205-.108l.737-.527a1.125 1.125 0 0 1 1.45.12l.773.774c.39.389.44 1.002.12 1.45l-.527.737c-.25.35-.272.806-.107 1.204c.165.397.505.71.93.78l.893.15c.543.09.94.56.94 1.109v1.094c0 .55-.397 1.02-.94 1.11l-.893.149c-.425.07-.765.383-.93.78c-.165.398-.143.854.107 1.204l.527.738c.32.447.269 1.06-.12 1.45l-.774.773a1.125 1.125 0 0 1-1.449.12l-.738-.527c-.35-.25-.806-.272-1.203-.107c-.397.165-.71.505-.781.929l-.149.894c-.09.542-.56.94-1.11.94h-1.094c-.55 0-1.019-.398-1.11-.94l-.148-.894c-.071-.424-.384-.764-.781-.93c-.398-.164-.854-.142-1.204.108l-.738.527c-.447.32-1.06.269-1.45-.12l-.773-.774a1.125 1.125 0 0 1-.12-1.45l.527-.737c.25-.35.273-.806.108-1.204c-.165-.397-.505-.71-.93-.78l-.894-.15c-.542-.09-.94-.56-.94-1.109v-1.094c0-.55.398-1.02.94-1.11l.894-.149c.424-.07.765-.383.93-.78c.165-.398.143-.854-.107-1.204l-.527-.738a1.125 1.125 0 0 1 .12-1.45l.773-.773a1.125 1.125 0 0 1 1.45-.12l.737.527c.35.25.807.272 1.204.107c.397-.165.71-.505.78-.929l.15-.894Z"/>
+                        <path d="M15 12a3 3 0 1 1-6 0a3 3 0 0 1 6 0Z"/>
+                      </g>
+                    </svg>
+                  </div>
+                  <h3>Anomaly Quarantine</h3>
+                </div>
+                <svg class="accordion-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                  <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m19.5 8.25l-7.5 7.5l-7.5-7.5"/>
+                </svg>
+              </div>
+              <div class="accordion-content">
+                <div class="accordion-body">
+                  <p>Detects structural drift, schema changes, or invalid fields in real-time, instantly quarantining bad records to isolated sandboxes.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Accordion Item 2 -->
+            <div class="accordion-item" data-index="2" id="accordion-item-2">
+              <div class="accordion-header">
+                <div class="accordion-title-block">
+                  <div class="accordion-icon-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                      <path fill="currentColor" fill-rule="evenodd" d="M19.902 4.098a3.75 3.75 0 0 0-5.304 0l-4.5 4.5a3.75 3.75 0 0 0 1.035 6.037a.75.75 0 0 1-.646 1.353a5.25 5.25 0 0 1-1.449-8.45l4.5-4.5a5.25 5.25 0 1 1 7.424 7.424l-1.757 1.757a.75.75 0 1 1-1.06-1.06l1.757-1.757a3.75 3.75 0 0 0 0-5.304Zm-7.389 4.267a.75.75 0 0 1 1-.353a5.25 5.25 0 0 1 1.449 8.45l-4.5 4.5a5.25 5.25 0 1 1-7.424-7.424l1.757-1.757a.75.75 0 1 1 1.06 1.06l-1.757 1.757a3.75 3.75 0 1 0 5.304 5.304l4.5-4.5a3.75 3.75 0 0 0-1.035-6.037a.75.75 0 0 1-.354-1Z" clip-rule="evenodd"/>
+                    </svg>
+                  </div>
+                  <h3>Global Edge Replication</h3>
+                </div>
+                <svg class="accordion-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                  <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m19.5 8.25l-7.5 7.5l-7.5-7.5"/>
+                </svg>
+              </div>
+              <div class="accordion-content">
+                <div class="accordion-body">
+                  <p>Maintains high-speed eventual consistency across 24 edge nodes, keeping pipelines synced globally with zero database lock delays.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FEATURE 1: Pricing Section with Calculator Slider -->
+      <section id="pricing">
+        <div class="container">
+          <div class="section-header">
+            <span class="section-tag">Flexible Deployment Plans</span>
+            <h2 class="section-title">Calculated and Regionalized Pricing</h2>
+            <p class="section-subtitle">
+              Calculate your exact tier tariff dynamically. Toggle billing cycles and adjust 
+              event throughput volumes in real-time.
+            </p>
+          </div>
+
+          <div class="pricing-controls">
+            <!-- Billing Switch Toggle -->
+            <div class="billing-switcher" id="billing-switcher" aria-label="Toggle billing cycle">
+              <span class="cycle-option active" data-cycle="monthly">Monthly</span>
+              <span class="cycle-option" data-cycle="annual">
+                Annual <span class="discount-tag">20% Off</span>
+              </span>
+            </div>
+            
+            <!-- Ingest Volume Range Slider -->
+            <div class="slider-container">
+              <div class="slider-label-row">
+                <span class="slider-label-title">Ingestion Volume:</span>
+                <span class="slider-label-value" id="slider-value-display">1.0x Scale</span>
+              </div>
+              <input type="range" min="1" max="10" value="1" step="0.5" class="pricing-range-slider" id="ingest-slider" aria-label="Ingestion volume scale slider">
+              <div class="slider-label-row" style="font-size: 0.7rem; color: var(--text-secondary);">
+                <span>1.0x Base</span>
+                <span>5.0x Scaling</span>
+                <span>10.0x Enterprise Load</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pricing Grid -->
+          <div class="pricing-grid">
+            <!-- Tier 1: Developer -->
+            <div class="pricing-card glass tilt-card" id="pricing-card-developer">
+              <h3>Developer</h3>
+              <p class="pricing-card-desc">For testing pipelines, small prototypes, and developer sandboxes.</p>
+              
+              <div class="price-display-wrapper">
+                <div class="price-value-container">
+                  <span class="price-currency" id="price-cur-developer">$</span>
+                  <span class="price-value" id="price-val-developer">19</span>
+                  <span class="price-duration" id="price-dur-developer">/mo</span>
+                </div>
+                <span class="price-subtext" id="price-sub-developer">billed monthly</span>
+              </div>
+              
+              <ul class="pricing-features-list">
+                <li>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  <span>10,000 monthly events</span>
+                </li>
+                <li>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  <span>3 active pipelines</span>
+                </li>
+                <li>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  <span>Shared edge cluster</span>
+                </li>
+              </ul>
+              
+              <button class="btn btn-secondary" type="button">Deploy Free Sandbox</button>
+            </div>
+
+            <!-- Tier 2: Scale (Popular) -->
+            <div class="pricing-card glass popular tilt-card" id="pricing-card-scale">
+              <span class="card-popular-badge">Most Popular</span>
+              <h3>Scale</h3>
+              <p class="pricing-card-desc">For growing startups and production engineering clusters.</p>
+              
+              <div class="price-display-wrapper">
+                <div class="price-value-container">
+                  <span class="price-currency" id="price-cur-scale">$</span>
+                  <span class="price-value" id="price-val-scale">49</span>
+                  <span class="price-duration" id="price-dur-scale">/mo</span>
+                </div>
+                <span class="price-subtext" id="price-sub-scale">billed monthly</span>
+              </div>
+              
+              <ul class="pricing-features-list">
+                <li>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  <span>500,000 monthly events</span>
+                </li>
+                <li>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  <span>Unlimited pipelines</span>
+                </li>
+                <li>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  <span>Isolated edge clusters</span>
+                </li>
+                <li>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  <span>Sub-millisecond SLA</span>
+                </li>
+              </ul>
+              
+              <button class="btn btn-primary" type="button">Deploy Scale Cluster</button>
+            </div>
+
+            <!-- Tier 3: Enterprise -->
+            <div class="pricing-card glass tilt-card" id="pricing-card-enterprise">
+              <h3>Enterprise</h3>
+              <p class="pricing-card-desc">For heavy enterprise workflows needing custom validation.</p>
+              
+              <div class="price-display-wrapper">
+                <div class="price-value-container">
+                  <span class="price-currency" id="price-cur-enterprise">$</span>
+                  <span class="price-value" id="price-val-enterprise">149</span>
+                  <span class="price-duration" id="price-dur-enterprise">/mo</span>
+                </div>
+                <span class="price-subtext" id="price-sub-enterprise">billed monthly</span>
+              </div>
+              
+              <ul class="pricing-features-list">
+                <li>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  <span>Unlimited monthly events</span>
+                </li>
+                <li>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  <span>Custom AI parsing code</span>
+                </li>
+                <li>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  <span>Dedicated physical hardware</span>
+                </li>
+                <li>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  <span>24/7 dedicated support team</span>
+                </li>
+              </ul>
+              
+              <button class="btn btn-secondary" type="button">Contact Sales</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Social Proof (Marquee & Testimonials) -->
+      <section id="testimonials" class="social-proof-section">
+        <div class="container">
+          <!-- Marquee Slider of partner logos -->
+          <div class="marquee-container" aria-label="Our trust metrics">
+            <div class="marquee-track">
+              <div class="marquee-item">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 0 1 5.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"/></svg>
+                <span>QUANTUMFLOW</span>
+              </div>
+              <div class="marquee-item">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 0 1 5.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"/></svg>
+                <span>SYNTHETIX.AI</span>
+              </div>
+              <div class="marquee-item">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 0 1 5.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"/></svg>
+                <span>KORTEX CORE</span>
+              </div>
+              <div class="marquee-item">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 0 1 5.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"/></svg>
+                <span>VELOCITY.DB</span>
+              </div>
+              <div class="marquee-item">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 0 1 5.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"/></svg>
+                <span>NEBULA TECH</span>
+              </div>
+            </div>
+            <!-- Duplicate track for infinite loop scrolling -->
+            <div class="marquee-track" aria-hidden="true">
+              <div class="marquee-item">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 0 1 5.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"/></svg>
+                <span>QUANTUMFLOW</span>
+              </div>
+              <div class="marquee-item">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 0 1 5.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"/></svg>
+                <span>SYNTHETIX.AI</span>
+              </div>
+              <div class="marquee-item">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 0 1 5.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"/></svg>
+                <span>KORTEX CORE</span>
+              </div>
+              <div class="marquee-item">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 0 1 5.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"/></svg>
+                <span>VELOCITY.DB</span>
+              </div>
+              <div class="marquee-item">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 0 1 5.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"/></svg>
+                <span>NEBULA TECH</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-header" style="margin-bottom: 50px;">
+            <h2 class="section-title">Endorsed by Technical Leads</h2>
+            <p class="section-subtitle">Read what architects and engineers say about Aether's zero-dependency pipeline infrastructure.</p>
+          </div>
+
+          <!-- Testimonials -->
+          <div class="testimonials-grid">
+            <div class="testimonial-card glass tilt-card">
+              <p class="testimonial-text">"With Aether.AI, our pipeline configuration file went from 1,200 lines of manual YAML to absolute zero. Schemas auto-synthesize instantly."</p>
+              <div class="testimonial-author">
+                <div class="author-avatar" aria-hidden="true">JD</div>
+                <div class="author-info">
+                  <h4>Jared Dahl</h4>
+                  <p>Lead DevOps, Synthetix</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="testimonial-card glass tilt-card">
+              <p class="testimonial-text">"The performance is astonishing. Standardizing schema checks at the edge reduced our database load by 45%. Real-time anomalies are isolated cleanly."</p>
+              <div class="testimonial-author">
+                <div class="author-avatar" aria-hidden="true">AR</div>
+                <div class="author-info">
+                  <h4>Ananya Roy</h4>
+                  <p>Principal Architect, Velocity</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="testimonial-card glass tilt-card">
+              <p class="testimonial-text">"Syncing eventual consistency across edge nodes used to cost us hundreds of milliseconds. Aether's replication keeps nodes aligned in sub-millisecond ranges."</p>
+              <div class="testimonial-author">
+                <div class="author-avatar" aria-hidden="true">MK</div>
+                <div class="author-info">
+                  <h4>Marcus Kael</h4>
+                  <p>VP Engineering, QuantumFlow</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Video Showcase Section -->
+      <section id="demo" class="demo-section">
+        <div class="container">
+          <div class="section-header">
+            <span class="section-tag">Interactive Preview</span>
+            <h2 class="section-title">See the Speed Run in Action</h2>
+            <p class="section-subtitle">Watch the structural layout transition, zero-render price switches, and accordion motion matching.</p>
+          </div>
+          
+          <div class="video-container glass tilt-card">
+            <video id="showcase-video" controls preload="metadata" aria-label="Aether.AI Platform Demo Video">
+              <source src="/demo.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer Section -->
+    <footer>
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <a href="#hero" class="logo-link" aria-label="Aether.AI homepage">
+              <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24" aria-hidden="true">
+                <path fill="currentColor" d="M8.372 1.349a.75.75 0 0 0-.744 0l-4.81 2.748L8 7.131l5.182-3.034zM14 5.357L8.75 8.43v6.005l4.872-2.784A.75.75 0 0 0 14 11zm-6.75 9.078V8.43L2 5.357V11c0 .27.144.518.378.651z"/>
+              </svg>
+              <span>Aether.AI</span>
+            </a>
+            <p>Deploying autonomous, zero-latency pipeline automation and regionalized edge synchronization for modern developer clusters.</p>
+          </div>
+          
+          <div class="footer-col">
+            <h4>Product</h4>
+            <ul>
+              <li><a href="#features">Features</a></li>
+              <li><a href="#pricing">Pricing</a></li>
+              <li><a href="#demo">Demo Video</a></li>
+            </ul>
+          </div>
+          
+          <div class="footer-col">
+            <h4>Developers</h4>
+            <ul>
+              <li><a href="https://github.com" target="_blank" rel="noopener">Documentation</a></li>
+              <li><a href="https://github.com" target="_blank" rel="noopener">API Reference</a></li>
+              <li><a href="https://github.com" target="_blank" rel="noopener">System Status</a></li>
+            </ul>
+          </div>
+          
+          <div class="footer-col">
+            <h4>Company</h4>
+            <ul>
+              <li><a href="https://github.com" target="_blank" rel="noopener">About Us</a></li>
+              <li><a href="https://github.com" target="_blank" rel="noopener">Blog</a></li>
+              <li><a href="https://github.com" target="_blank" rel="noopener">Careers</a></li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="footer-bottom">
+          <p>&copy; 2026 Aether.AI. Engineered for the Frontend Battle Speed Run. All rights reserved.</p>
+          
+          <div class="footer-social-links">
+            <a href="https://github.com" target="_blank" rel="noopener" aria-label="GitHub page">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489c.5.092.682-.217.682-.482c0-.237-.008-.866-.013-1.7c-2.782.603-3.369-1.34-3.369-1.34c-.454-1.156-1.11-1.464-1.11-1.464c-.908-.62.069-.608.069-.608c1.003.07 1.531 1.03 1.531 1.03c.892 1.529 2.341 1.087 2.91.831c.092-.646.35-1.086.636-1.336c-2.22-.253-4.555-1.11-4.555-4.943c0-1.091.39-1.984 1.029-2.683c-.103-.253-.446-1.27.098-2.647c0 0 .84-.269 2.75 1.025A9.564 9.564 0 0 1 12 6.844c.85.004 1.705.115 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025c.546 1.377.203 2.394.1 2.647c.64.699 1.028 1.592 1.028 2.683c0 3.842-2.339 4.687-4.566 4.935c.359.309.678.919.678 1.852c0 1.336-.012 2.415-.012 2.743c0 .267.18.579.688.481C19.138 20.161 22 16.418 22 12c0-5.523-4.477-10-10-10z" clip-rule="evenodd"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Main Hydration & Interactive Controller Script -->
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

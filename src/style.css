@@ -2,18 +2,18 @@
 
 :root {
   /* Exact Color Palette Tokens */
-  --arctic-powder: #F1F5F4;
+  --arctic-powder: #F1F6F4;
   --forsythia: #FFC801;
   --nocturnal-expedition: #114C5A;
-  --mystic-mint: #D9E8E3;
+  --mystic-mint: #D9E8E2;
   --deep-saffron: #FF9A32;
   --oceanic-noir: #172B36;
 
   /* Theme Configurations */
   --bg-primary: var(--oceanic-noir);
-  --bg-surface: rgba(17, 76, 90, 0.08);
-  --bg-surface-hover: rgba(17, 76, 90, 0.16);
-  --border-color: rgba(217, 232, 227, 0.08);
+  --bg-surface: rgba(217, 232, 226, 0.05); /* Mystic Mint subtle background */
+  --bg-surface-hover: rgba(217, 232, 226, 0.12);
+  --border-color: rgba(217, 232, 226, 0.15); /* Mystic Mint subtle border */
   --border-active: var(--forsythia);
   --text-primary: var(--arctic-powder);
   --text-secondary: #90A4A8;
@@ -471,7 +471,8 @@ nav.nav-links a:hover::after {
 .stat-divider {
   width: 1px;
   height: 54px;
-  background: rgba(217, 232, 227, 0.08);
+  background: var(--mystic-mint); /* Divider using #D9E8E2 */
+  opacity: 0.3;
 }
 
 /* Countdown Timer */
@@ -1080,7 +1081,7 @@ section {
   width: 100%;
   height: 6px;
   border-radius: 3px;
-  background: rgba(17, 76, 90, 0.4);
+  background: var(--mystic-mint); /* Input slider track background using #D9E8E2 */
   outline: none;
   cursor: pointer;
 }

@@ -1,638 +1,452 @@
 import './style.css';
 
-document.addEventListener('DOMContentLoaded', () => {
+function init() {
   /* ==========================================================================
-     Countdown Timer (JetBrains Mono)
+     Three.js 3D Mouse-Tracking Robot
      ========================================================================== */
-  let timeLeft = 2 * 60 * 60 * 1000 + 14 * 60 * 1000 + 55 * 1000; // 2h 14m 55s
-  const countdownEl = document.getElementById('countdown-timer');
-  const startTime = Date.now();
+  const container = document.getElementById('robot-scene-container');
+  const canvas3d = document.getElementById('robot-canvas');
 
-  function updateCountdown() {
-    const elapsed = Date.now() - startTime;
-    const remaining = Math.max(0, timeLeft - elapsed);
-    
-    const hours = Math.floor(remaining / (3600 * 1000));
-    const mins = Math.floor((remaining % (3600 * 1000)) / (60 * 1000));
-    const secs = Math.floor((remaining % (60 * 1000)) / 1000);
-    const ms = Math.floor((remaining % 1000) / 10);
-    
-    if (countdownEl) {
-      countdownEl.textContent = 
-        `${String(hours).padStart(2, '0')}h : ` +
-        `${String(mins).padStart(2, '0')}m : ` +
-        `${String(secs).padStart(2, '0')}s : ` +
-        `${String(ms).padStart(2, '0')}ms`;
-    }
-    
-    if (remaining > 0) {
-      requestAnimationFrame(updateCountdown);
-    }
-  }
-  requestAnimationFrame(updateCountdown);
+  // Hoisted so manga dialogue & gesture functions can access these
+  let targetRotL = { x: 0, y: 0, z: 0.15 };
+  let targetRotR = { x: 0, y: 0, z: -0.15 };
+  let activeSectionName = 'hero';
 
-  /* ==========================================================================
-     Interactive Canvas Particle Background (Google / Sony Style)
-     ========================================================================== */
-  const canvas = document.getElementById('hero-canvas');
-  if (canvas) {
-    const ctx = canvas.getContext('2d');
-    let width = (canvas.width = canvas.offsetWidth);
-    let height = (canvas.height = canvas.offsetHeight);
+  if (container && canvas3d) {
+    const scene = new THREE.Scene();
+    
+    // Camera
+    const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100);
+    camera.position.set(0, 1.8, 6.5);
+    camera.lookAt(0, 1.2, 0);
 
-    window.addEventListener('resize', () => {
-      width = canvas.width = canvas.offsetWidth;
-      height = canvas.height = canvas.offsetHeight;
+    // WebGL Renderer
+    const renderer = new THREE.WebGLRenderer({ canvas: canvas3d, antialias: true, alpha: true });
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.shadowMap.enabled = true;
+
+    // Groups for rotation hierarchy
+    const robotGroup = new THREE.Group();
+    const upperBodyGroup = new THREE.Group();
+    const headGroup = new THREE.Group();
+    
+    // Target joint rotations & state variables defined at init() scope above
+    
+    upperBodyGroup.position.y = 0.8;
+    headGroup.position.y = 1.1; // relative to upper body
+    
+    // Add sub-groups
+    upperBodyGroup.add(headGroup);
+    robotGroup.add(upperBodyGroup);
+    scene.add(robotGroup);
+
+    // Materials (matching the battle color palette tokens)
+    const glossyWhite = new THREE.MeshPhysicalMaterial({
+      color: 0xf1f6f4, // Arctic Powder
+      roughness: 0.15,
+      metalness: 0.2,
+      clearcoat: 1.0,
+      clearcoatRoughness: 0.1
     });
 
-    let mouse = { x: width / 2, y: height / 2, targetX: width / 2, targetY: height / 2 };
-    
-    const heroSection = document.getElementById('hero');
-    if (heroSection) {
-      heroSection.addEventListener('mousemove', (e) => {
-        const rect = heroSection.getBoundingClientRect();
-        mouse.targetX = e.clientX - rect.left;
-        mouse.targetY = e.clientY - rect.top;
-      });
-      heroSection.addEventListener('mouseleave', () => {
-        mouse.targetX = width / 2;
-        mouse.targetY = height / 2;
-      });
-    }
-
-    // Initialize 3D Sphere Particles (Fibonacci distribution)
-    const particles = [];
-    const particleCount = 110;
-    
-    // Config values based on screen size
-    let isMobile = window.innerWidth <= 768;
-    let sphereRadius = isMobile ? 120 : 210;
-    
-    window.addEventListener('resize', () => {
-      isMobile = window.innerWidth <= 768;
-      sphereRadius = isMobile ? 120 : 210;
+    const glossyDark = new THREE.MeshStandardMaterial({
+      color: 0x172b36, // Oceanic Noir
+      roughness: 0.2,
+      metalness: 0.8
     });
 
-    for (let i = 0; i < particleCount; i++) {
-      const y = 1 - (i / (particleCount - 1)) * 2;
-      const radiusAtY = Math.sqrt(1 - y * y);
-      const theta = i * 2.39996; // Golden angle
-      
-      particles.push({
-        x: Math.cos(theta) * radiusAtY * sphereRadius,
-        y: y * sphereRadius,
-        z: Math.sin(theta) * radiusAtY * sphereRadius,
-        baseX: Math.cos(theta) * radiusAtY,
-        baseY: y,
-        baseZ: Math.sin(theta) * radiusAtY,
-        pulseSpeed: 0.02 + Math.random() * 0.03,
-        pulsePhase: Math.random() * Math.PI * 2
-      });
-    }
+    const neonAccentMat = new THREE.MeshBasicMaterial({
+      color: 0xffc801 // Forsythia
+    });
 
-    // Define 3D wireframe connection indices
-    const connections = [];
-    for (let i = 0; i < particleCount; i++) {
-      if (i < particleCount - 1) connections.push([i, i + 1]);
-      if (i < particleCount - 6) connections.push([i, i + 6]);
-      if (i < particleCount - 12) connections.push([i, i + 12]);
-    }
+    // 1. Pedestal Base
+    const pedestalGeo = new THREE.CylinderGeometry(1.6, 1.8, 0.25, 32);
+    const pedestal = new THREE.Mesh(pedestalGeo, glossyDark);
+    pedestal.position.y = -1.25;
+    scene.add(pedestal);
 
-    // Telemetry labels to draw (Jarvis overlay)
-    const telemetryTexts = [
-      "AETHER // EDGE_01",
-      "STATUS: ACTIVE",
-      "LATENCY: 0.18ms",
-      "SLA: 99.99%",
-      "REPLICAS: 24",
-      "INGEST_SYS: OK",
-      "SCHEMA: VALID",
-      "MUTATION: LOCKED"
+    // Glowing rim on pedestal
+    const rimGeo = new THREE.TorusGeometry(1.62, 0.03, 8, 48);
+    const rim = new THREE.Mesh(rimGeo, neonAccentMat);
+    rim.rotation.x = Math.PI / 2;
+    rim.position.y = -1.13;
+    scene.add(rim);
+
+    // 2. Torso (Body)
+    const torsoGeo = new THREE.CylinderGeometry(0.65, 0.5, 1.4, 32);
+    const torso = new THREE.Mesh(torsoGeo, glossyWhite);
+    torso.position.y = 0;
+    upperBodyGroup.add(torso);
+
+    // Decorative chest plate/logo
+    const chestPlateGeo = new THREE.BoxGeometry(0.5, 0.3, 0.1);
+    const chestPlate = new THREE.Mesh(chestPlateGeo, glossyDark);
+    chestPlate.position.set(0, 0.2, 0.6);
+    upperBodyGroup.add(chestPlate);
+
+    const chestLedGeo = new THREE.BoxGeometry(0.3, 0.06, 0.05);
+    const chestLed = new THREE.Mesh(chestLedGeo, neonAccentMat);
+    chestLed.position.set(0, 0.2, 0.66);
+    upperBodyGroup.add(chestLed);
+
+    // 3. Neck
+    const neckGeo = new THREE.CylinderGeometry(0.2, 0.2, 0.3, 16);
+    const neck = new THREE.Mesh(neckGeo, glossyDark);
+    neck.position.y = 0.85;
+    upperBodyGroup.add(neck);
+
+    // 4. Head
+    const headBoxGeo = new THREE.BoxGeometry(1.1, 0.8, 0.8);
+    
+    // Custom screen texture for front face
+    const canvasScreen = document.createElement('canvas');
+    canvasScreen.width = 256;
+    canvasScreen.height = 256;
+    const ctx = canvasScreen.getContext('2d');
+    ctx.fillStyle = '#172b36'; // Oceanic Noir screen background
+    ctx.fillRect(0, 0, 256, 256);
+    
+    // Border
+    ctx.strokeStyle = '#ffc801'; // Forsythia screen border
+    ctx.lineWidth = 12;
+    ctx.strokeRect(10, 10, 236, 236);
+    // Deep Saffron detail
+    ctx.strokeStyle = '#ff9932'; // Deep Saffron inner detail
+    ctx.lineWidth = 4;
+    ctx.strokeRect(22, 22, 212, 212);
+    // Eyes
+    ctx.fillStyle = '#d9e8e2'; // Mystic Mint eyes
+    ctx.beginPath();
+    ctx.arc(80, 128, 20, 0, Math.PI*2);
+    ctx.arc(176, 128, 20, 0, Math.PI*2);
+    ctx.fill();
+    // Pupils
+    ctx.fillStyle = '#f1f6f4'; // Arctic Powder pupils
+    ctx.beginPath();
+    ctx.arc(80, 128, 8, 0, Math.PI*2);
+    ctx.arc(176, 128, 8, 0, Math.PI*2);
+    ctx.fill();
+
+    const screenTex = new THREE.CanvasTexture(canvasScreen);
+    const screenMaterial = new THREE.MeshStandardMaterial({
+      map: screenTex,
+      roughness: 0.1,
+      metalness: 0.5
+    });
+
+    // Array of materials: +X, -X, +Y, -Y, +Z (Front), -Z
+    const headMaterials = [
+      glossyWhite, // +X right
+      glossyWhite, // -X left
+      glossyWhite, // +Y top
+      glossyWhite, // -Y bottom
+      screenMaterial, // +Z front
+      glossyWhite  // -Z back
     ];
-    
-    // Assign labels to specific particles on the side
-    const labeledParticles = [10, 25, 40, 55, 70, 85, 95, 105];
 
-    let rotX = 0;
-    let rotY = 0;
-    let rotZ = 0;
+    const headMesh = new THREE.Mesh(headBoxGeo, headMaterials);
+    headMesh.position.y = 0.4;
+    headGroup.add(headMesh);
 
-    function animateParticles(time) {
-      ctx.clearRect(0, 0, width, height);
+    // Ears / Antenna joints
+    const earLGeo = new THREE.CylinderGeometry(0.12, 0.12, 0.15, 16);
+    const earL = new THREE.Mesh(earLGeo, glossyDark);
+    earL.rotation.z = Math.PI / 2;
+    earL.position.set(-0.62, 0.4, 0);
+    headGroup.add(earL);
 
-      // Smoothly ease mouse coordinates
-      mouse.x += (mouse.targetX - mouse.x) * 0.08;
-      mouse.y += (mouse.targetY - mouse.y) * 0.08;
+    const earR = earL.clone();
+    earR.position.x = 0.62;
+    headGroup.add(earR);
 
-      const centerX = width / 2;
-      const centerY = height / 2 - 20;
+    // Antenna
+    const antStemGeo = new THREE.CylinderGeometry(0.03, 0.03, 0.4, 8);
+    const antStem = new THREE.Mesh(antStemGeo, glossyDark);
+    antStem.position.set(0, 0.9, 0);
+    headGroup.add(antStem);
 
-      // Base rotation + interactive mouse tilting
-      const targetRotX = (mouse.y - height / 2) * 0.0006;
-      const targetRotY = (mouse.x - width / 2) * 0.0006;
+    const antTipGeo = new THREE.SphereGeometry(0.08, 16, 16);
+    const antTip = new THREE.Mesh(antTipGeo, neonAccentMat);
+    antTip.position.set(0, 1.15, 0);
+    headGroup.add(antTip);
+
+    // 5. Arms
+    // Left arm group pivot
+    const armLJoint = new THREE.Group();
+    armLJoint.position.set(-0.85, 0.5, 0);
+    upperBodyGroup.add(armLJoint);
+
+    // Left shoulder sphere
+    const shoulderLGeo = new THREE.SphereGeometry(0.18, 16, 16);
+    const shoulderL = new THREE.Mesh(shoulderLGeo, glossyDark);
+    armLJoint.add(shoulderL);
+
+    // Left arm cylinder offset down (pivot at shoulder)
+    const armLGeo = new THREE.CylinderGeometry(0.12, 0.1, 0.9, 16);
+    const armL = new THREE.Mesh(armLGeo, glossyWhite);
+    armL.position.set(-0.1, -0.45, 0);
+    armLJoint.add(armL);
+
+    // Right arm group pivot
+    const armRJoint = new THREE.Group();
+    armRJoint.position.set(0.85, 0.5, 0);
+    upperBodyGroup.add(armRJoint);
+
+    // Right shoulder sphere
+    const shoulderRGeo = new THREE.SphereGeometry(0.18, 16, 16);
+    const shoulderR = new THREE.Mesh(shoulderRGeo, glossyDark);
+    armRJoint.add(shoulderR);
+
+    // Right arm cylinder offset down (pivot at shoulder)
+    const armRGeo = new THREE.CylinderGeometry(0.12, 0.1, 0.9, 16);
+    const armR = new THREE.Mesh(armRGeo, glossyWhite);
+    armR.position.set(0.1, -0.45, 0);
+    armRJoint.add(armR);
+
+    // Lights
+    const ambientLight = new THREE.AmbientLight(0xf1f6f4, 0.35); // Arctic Powder light
+    scene.add(ambientLight);
+
+    const keyLight = new THREE.DirectionalLight(0xf1f6f4, 1.0);
+    keyLight.position.set(5, 8, 5);
+    scene.add(keyLight);
+
+    // Neon highlight lights (Forsythia / Deep Saffron PointLights matching the palette)
+    const goldLight = new THREE.PointLight(0xffc801, 3.5, 15); // Forsythia Accent
+    goldLight.position.set(-3.5, 1.5, 2.5);
+    scene.add(goldLight);
+
+    const orangeLight = new THREE.PointLight(0xff9932, 3.5, 15); // Deep Saffron Accent
+    orangeLight.position.set(3.5, 1.5, 2.5);
+    scene.add(orangeLight);
+
+    // Handle mouse tracking coords
+    let mouseX = 0;
+    let mouseY = 0;
+
+    window.addEventListener('mousemove', (e) => {
+      // Normalize values between -1 and 1
+      mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+      mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+    });
+
+    // Handle resize
+    window.addEventListener('resize', () => {
+      if (!container) return;
+      const width = container.clientWidth;
+      const height = container.clientHeight;
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      renderer.setSize(width, height);
+    });
+
+    // Dynamic screen canvas blinking eyes & pupils tracking update
+    function updateScreenCanvas(isBlinking) {
+      ctx.fillStyle = '#172b36'; // Oceanic Noir screen background
+      ctx.fillRect(0, 0, 256, 256);
       
-      rotX += (targetRotX - rotX) * 0.05 + 0.0015;
-      rotY += (targetRotY - rotY) * 0.05 + 0.0025;
-      rotZ += 0.0008;
+      // Border
+      ctx.strokeStyle = '#ffc801'; // Forsythia screen border
+      ctx.lineWidth = 12;
+      ctx.strokeRect(10, 10, 236, 236);
+      
+      // Deep Saffron detail
+      ctx.strokeStyle = '#ff9932'; // Deep Saffron inner detail
+      ctx.lineWidth = 4;
+      ctx.strokeRect(22, 22, 212, 212);
 
-      // Projection parameters
-      const d = 400; // Camera distance
-
-      // Project particles in 3D
-      const projected = particles.map(p => {
-        // Pulse radius slightly for dynamic breathing effect
-        p.pulsePhase += p.pulseSpeed;
-        const pulse = 1 + Math.sin(p.pulsePhase) * 0.03;
+      if (isBlinking) {
+        // Draw eyes as horizontal lines (blinking state)
+        ctx.strokeStyle = '#d9e8e2'; // Mystic Mint eyes
+        ctx.lineWidth = 8;
+        ctx.lineCap = 'round';
         
-        let x = p.baseX * sphereRadius * pulse;
-        let y = p.baseY * sphereRadius * pulse;
-        let z = p.baseZ * sphereRadius * pulse;
-
-        // Rotate X
-        let cosX = Math.cos(rotX), sinX = Math.sin(rotX);
-        let y1 = y * cosX - z * sinX;
-        let z1 = y * sinX + z * cosX;
-
-        // Rotate Y
-        let cosY = Math.cos(rotY), sinY = Math.sin(rotY);
-        let x2 = x * cosY - z1 * sinY;
-        let z2 = x * sinY + z1 * cosY;
-
-        // Rotate Z
-        let cosZ = Math.cos(rotZ), sinZ = Math.sin(rotZ);
-        let x3 = x2 * cosZ - y1 * sinZ;
-        let y3 = x2 * sinZ + y1 * cosZ;
-
-        // Perspective Projection
-        const scale = d / (d + z2);
-        const sx = centerX + x3 * scale;
-        const sy = centerY + y3 * scale;
-
-        return { sx, sy, zDepth: z2, scale, visible: sx >= 0 && sx <= width && sy >= 0 && sy <= height };
-      });
-
-      // Draw 3D Telemetry HUD Circles (Jarvis Dials)
-      const ringRadii = [sphereRadius * 1.15, sphereRadius * 1.3, sphereRadius * 1.45];
-      ringRadii.forEach((r, idx) => {
+        // Left eye line
         ctx.beginPath();
-        const steps = 60;
-        const speedMultiplier = idx % 2 === 0 ? 1 : -1.2;
-        const angleOffset = (time * 0.0004) * speedMultiplier;
-        
-        for (let i = 0; i <= steps; i++) {
-          const theta = (i / steps) * Math.PI * 2 + angleOffset;
-          let x = Math.cos(theta) * r;
-          let z = Math.sin(theta) * r;
-          let y = 0;
+        ctx.moveTo(60, 128);
+        ctx.lineTo(100, 128);
+        ctx.stroke();
 
-          // Tilts the ring slightly on X-Y-Z
-          const tiltX = 0.4 * (idx - 1);
-          const tiltY = 0.3 * (idx - 1);
-          
-          // Apply tilts/rotations
-          let cosTX = Math.cos(rotX + tiltX), sinTX = Math.sin(rotX + tiltX);
-          let y1 = y * cosTX - z * sinTX;
-          let z1 = y * sinTX + z * cosTX;
-
-          let cosTY = Math.cos(rotY + tiltY), sinTY = Math.sin(rotY + tiltY);
-          let x2 = x * cosTY - z1 * sinTY;
-          let z2 = x * sinTY + z1 * cosTY;
-
-          const scale = d / (d + z2);
-          const sx = centerX + x2 * scale;
-          const sy = centerY + y1 * scale;
-
-          if (i === 0) ctx.moveTo(sx, sy);
-          else ctx.lineTo(sx, sy);
-        }
-        
-        // Custom styling for Jarvis HUD rings
-        if (idx === 0) {
-          ctx.strokeStyle = 'rgba(217, 232, 226, 0.06)';
-          ctx.lineWidth = 1;
-          ctx.stroke();
-        } else if (idx === 1) {
-          // Dash style
-          ctx.strokeStyle = 'rgba(255, 200, 1, 0.08)';
-          ctx.lineWidth = 1.2;
-          ctx.setLineDash([4, 12]);
-          ctx.stroke();
-          ctx.setLineDash([]);
-        } else {
-          // Subtle outer coordinate boundary
-          ctx.strokeStyle = 'rgba(17, 76, 90, 0.1)';
-          ctx.lineWidth = 0.8;
-          ctx.stroke();
-        }
-      });
-
-      // Draw Connections (Mesh lines)
-      connections.forEach(([i, j]) => {
-        const p1 = projected[i];
-        const p2 = projected[j];
-
-        if (p1.visible && p2.visible) {
-          // Opacity based on average depth (Z coordinate)
-          const avgDepth = (p1.zDepth + p2.zDepth) / 2;
-          // Normalize depth from sphereRadius (front) to -sphereRadius (back)
-          let alpha = (1 - (avgDepth + sphereRadius) / (sphereRadius * 2)) * 0.15;
-          if (alpha < 0.01) return;
-
-          ctx.beginPath();
-          ctx.moveTo(p1.sx, p1.sy);
-          ctx.lineTo(p2.sx, p2.sy);
-          ctx.strokeStyle = `rgba(217, 232, 226, ${alpha})`;
-          ctx.lineWidth = 0.6;
-          ctx.stroke();
-        }
-      });
-
-      // Draw Particles (Nodes)
-      projected.forEach((p, idx) => {
-        if (!p.visible) return;
-
-        // Scale opacity based on depth
-        let alpha = (1 - (p.zDepth + sphereRadius) / (sphereRadius * 2)) * 0.55;
-        if (alpha < 0.05) return;
-
+        // Right eye line
         ctx.beginPath();
-        const size = (p.scale * 2.5) * (1 - (p.zDepth + sphereRadius) / (sphereRadius * 2.5));
-        ctx.arc(p.sx, p.sy, Math.max(0.5, size), 0, Math.PI * 2);
-        
-        // Alternate colors for node accents
-        if (idx % 8 === 0) {
-          ctx.fillStyle = `rgba(255, 200, 1, ${alpha + 0.25})`; // Forsythia gold node
-        } else if (idx % 12 === 0) {
-          ctx.fillStyle = `rgba(255, 154, 50, ${alpha + 0.25})`; // Deep Saffron node
-        } else {
-          ctx.fillStyle = `rgba(217, 232, 226, ${alpha})`; // Mystic mint node
-        }
+        ctx.moveTo(156, 128);
+        ctx.lineTo(196, 128);
+        ctx.stroke();
+      } else {
+        // Draw eyes (circles)
+        ctx.fillStyle = '#d9e8e2'; // Mystic Mint eyes
+        ctx.beginPath();
+        ctx.arc(80, 128, 20, 0, Math.PI*2);
+        ctx.arc(176, 128, 20, 0, Math.PI*2);
         ctx.fill();
-
-        // Draw HUD scan telemetry labels (Jarvis overlays)
-        const labelIdx = labeledParticles.indexOf(idx);
-        if (labelIdx !== -1 && !isMobile) {
-          const text = telemetryTexts[labelIdx];
-          const isRight = p.sx > centerX;
-          const lineLength = 40;
-          const textOffset = isRight ? 8 : -8;
-          
-          ctx.beginPath();
-          ctx.moveTo(p.sx, p.sy);
-          
-          const endX = p.sx + (isRight ? lineLength : -lineLength);
-          ctx.lineTo(endX, p.sy);
-          ctx.strokeStyle = `rgba(255, 200, 1, ${alpha * 0.6})`;
-          ctx.lineWidth = 0.8;
-          ctx.stroke();
-
-          // Draw the telemetry text label
-          ctx.font = '7.5px monospace';
-          ctx.fillStyle = `rgba(255, 200, 1, ${alpha * 0.85})`;
-          ctx.textAlign = isRight ? 'left' : 'right';
-          ctx.fillText(text, endX + textOffset, p.sy + 2.5);
-        }
-      });
-
-      // Draw horizontal sweeping scanner line (Jarvis laser)
-      const sweepY = centerY + Math.sin(time * 0.0015) * sphereRadius;
-      ctx.beginPath();
-      ctx.moveTo(centerX - sphereRadius * 1.1, sweepY);
-      ctx.lineTo(centerX + sphereRadius * 1.1, sweepY);
-      const sweepGradient = ctx.createLinearGradient(centerX - sphereRadius, 0, centerX + sphereRadius, 0);
-      sweepGradient.addColorStop(0, 'rgba(255, 200, 1, 0)');
-      sweepGradient.addColorStop(0.5, 'rgba(255, 200, 1, 0.16)');
-      sweepGradient.addColorStop(1, 'rgba(255, 200, 1, 0)');
-      ctx.strokeStyle = sweepGradient;
-      ctx.lineWidth = 1;
-      ctx.stroke();
-
-      requestAnimationFrame((t) => animateParticles(t));
-    }
-    requestAnimationFrame((t) => animateParticles(t));
-  }
-
-  /* ==========================================================================
-     Apple 3D Hover Tilt Effect
-     ========================================================================== */
-  const tiltCards = document.querySelectorAll('.tilt-card');
-  tiltCards.forEach(card => {
-    card.addEventListener('mousemove', (e) => {
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      
-      const px = x / rect.width;
-      const py = y / rect.height;
-      
-      // Calculate tilts (-6deg to +6deg)
-      const rx = (py - 0.5) * -12;
-      const ry = (px - 0.5) * 12;
-      
-      card.style.transform = `perspective(1000px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-2px)`;
-      card.style.setProperty('--mx', `${px * 100}%`);
-      card.style.setProperty('--my', `${py * 100}%`);
-    });
-    
-    card.addEventListener('mouseleave', () => {
-      card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
-    });
-  });
-
-  /* ==========================================================================
-     Rolling Counter Stats Animation (Count Up on Load)
-     ========================================================================== */
-  function animateCounters() {
-    const stats = [
-      { id: 'stat-accuracy', start: 90.00, end: 99.99, decimals: 2 },
-      { id: 'stat-sla', start: 1.50, end: 0.18, decimals: 2 },
-      { id: 'stat-replicas', start: 0, end: 24, decimals: 0 }
-    ];
-
-    const duration = 1800; // ms
-    const frameRate = 60;
-    const totalFrames = Math.round(duration / (1000 / frameRate));
-
-    stats.forEach(stat => {
-      const el = document.getElementById(stat.id);
-      if (!el) return;
-      
-      let frame = 0;
-      const step = () => {
-        frame++;
-        const progress = frame / totalFrames;
-        // EaseOutExpo curve
-        const easeVal = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
-        const current = stat.start + (stat.end - stat.start) * easeVal;
         
-        el.textContent = current.toFixed(stat.decimals);
+        // Pupils track mouse coordinates slightly for realism
+        const pupilOffsetX = mouseX * 7;
+        const pupilOffsetY = -mouseY * 7;
         
-        if (frame < totalFrames) {
-          requestAnimationFrame(step);
-        } else {
-          el.textContent = stat.end.toFixed(stat.decimals);
+        ctx.fillStyle = '#f1f6f4'; // Arctic Powder pupils
+        ctx.beginPath();
+        ctx.arc(80 + pupilOffsetX, 128 + pupilOffsetY, 8, 0, Math.PI*2);
+        ctx.arc(176 + pupilOffsetX, 128 + pupilOffsetY, 8, 0, Math.PI*2);
+        ctx.fill();
+      }
+      screenTex.needsUpdate = true;
+    }
+
+    // Animation Loop
+    const clock = new THREE.Clock();
+    let lastTime = 0;
+
+    let blinkTimer = 0;
+    let nextBlinkTime = 3.0; // blink initially in 3 seconds
+    let isBlinking = false;
+    let blinkDurationTimer = 0;
+    
+    function animate() {
+      requestAnimationFrame(animate);
+
+      const elapsedTime = clock.getElapsedTime();
+      const deltaTime = elapsedTime - lastTime;
+      lastTime = elapsedTime;
+
+      // Handle eye blinking timer updates
+      blinkTimer += deltaTime;
+      if (isBlinking) {
+        blinkDurationTimer += deltaTime;
+        if (blinkDurationTimer >= 0.14) { // blink lasts 140ms
+          isBlinking = false;
+          blinkDurationTimer = 0;
+          blinkTimer = 0;
+          nextBlinkTime = Math.random() * 4 + 2; // next blink in 2 to 6 seconds
         }
-      };
-      requestAnimationFrame(step);
-    });
-  }
-  // Delay slightly to coordinate with fade-in entry animation
-  setTimeout(animateCounters, 300);
-
-  /* ==========================================================================
-     IDE Workspace Tab Switcher
-     ========================================================================== */
-  const tabEditor = document.getElementById('tab-editor');
-  const tabLogs = document.getElementById('tab-logs');
-  const tabTerminal = document.getElementById('tab-terminal');
-  const panelEditor = document.getElementById('panel-editor');
-  const panelLogs = document.getElementById('panel-logs');
-  const panelTerminal = document.getElementById('panel-terminal');
-
-  if (tabEditor && tabLogs && tabTerminal && panelEditor && panelLogs && panelTerminal) {
-    tabEditor.addEventListener('click', () => {
-      tabEditor.classList.add('active');
-      tabLogs.classList.remove('active');
-      tabTerminal.classList.remove('active');
-      panelEditor.style.display = 'block';
-      panelLogs.style.display = 'none';
-      panelTerminal.style.display = 'none';
-    });
-
-    tabLogs.addEventListener('click', () => {
-      tabLogs.classList.add('active');
-      tabEditor.classList.remove('active');
-      tabTerminal.classList.remove('active');
-      panelLogs.style.display = 'block';
-      panelEditor.style.display = 'none';
-      panelTerminal.style.display = 'none';
-    });
-
-    tabTerminal.addEventListener('click', () => {
-      tabTerminal.classList.add('active');
-      tabEditor.classList.remove('active');
-      tabLogs.classList.remove('active');
-      panelTerminal.style.display = 'flex'; // Uses flex layout for input alignment
-      panelEditor.style.display = 'none';
-      panelLogs.style.display = 'none';
-      // Automatically focus terminal input
-      const cliInput = document.getElementById('cli-input');
-      if (cliInput) cliInput.focus();
-    });
-  }
-
-  /* ==========================================================================
-     Interactive Terminal Shell (Aether CLI)
-     ========================================================================== */
-  const cliInput = document.getElementById('cli-input');
-  const cliOutput = document.getElementById('cli-output');
-  const panelTerminalScroll = document.getElementById('panel-terminal');
-
-  if (cliInput && cliOutput) {
-    cliInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        const command = cliInput.value.trim();
-        cliInput.value = ''; // Clear input
-
-        if (command) {
-          handleCliCommand(command);
+      } else {
+        if (blinkTimer >= nextBlinkTime) {
+          isBlinking = true;
+          blinkDurationTimer = 0;
         }
       }
+
+      // Redraw canvas with blinking state & eye tracking coordinates
+      updateScreenCanvas(isBlinking);
+
+      // Floating hover movement
+      const hoverOffset = Math.sin(elapsedTime * 2.2) * 0.08;
+      robotGroup.position.y = hoverOffset + 0.45;
+
+      // Mouse tracking head target rotations
+      const targetHeadRotY = mouseX * 0.7; // turns left/right
+      const targetHeadRotX = mouseY * 0.4; // tilts up/down
+      const targetBodyRotY = mouseX * 0.25;
+
+      // Smooth lerp head rotation interpolation
+      headGroup.rotation.y += (targetHeadRotY - headGroup.rotation.y) * 0.08;
+      headGroup.rotation.x += (targetHeadRotX - headGroup.rotation.x) * 0.08;
+      upperBodyGroup.rotation.y += (targetBodyRotY - upperBodyGroup.rotation.y) * 0.08;
+
+      // Smooth lerp arm gestures to targets with breathing motions
+      armLJoint.rotation.x += (targetRotL.x + Math.sin(elapsedTime * 2.2) * 0.04 - armLJoint.rotation.x) * 0.1;
+      armLJoint.rotation.y += (targetRotL.y - armLJoint.rotation.y) * 0.1;
+      armLJoint.rotation.z += (targetRotL.z - armLJoint.rotation.z) * 0.1;
+
+      if (activeSectionName === 'hero') {
+        // Waving animation on right arm
+        const waveOffset = Math.sin(elapsedTime * 8) * 0.35;
+        armRJoint.rotation.z += (targetRotR.z + waveOffset - armRJoint.rotation.z) * 0.15;
+        armRJoint.rotation.x += (targetRotR.x - armRJoint.rotation.x) * 0.1;
+        armRJoint.rotation.y += (targetRotR.y - armRJoint.rotation.y) * 0.1;
+      } else {
+        armRJoint.rotation.x += (targetRotR.x + Math.sin(elapsedTime * 2.2) * -0.04 - armRJoint.rotation.x) * 0.1;
+        armRJoint.rotation.y += (targetRotR.y - armRJoint.rotation.y) * 0.1;
+        armRJoint.rotation.z += (targetRotR.z - armRJoint.rotation.z) * 0.1;
+      }
+
+      renderer.render(scene, camera);
+    }
+    
+    animate();
+  }
+
+  /* ==========================================================================
+     GSAP Intro Loader and Landing Page Reveal
+     ========================================================================== */
+  const progressEl = document.querySelector('.loader-progress');
+  const statusEl = document.querySelector('.loader-status');
+  
+  if (progressEl) {
+    gsap.to(progressEl, {
+      width: '100%',
+      duration: 1.0,
+      ease: 'power2.inOut',
+      onComplete: () => {
+        if (statusEl) statusEl.textContent = 'SYSTEM ACTIVE';
+        
+        // Pause briefly, then fade out splash screen (300ms delay, 400ms fade)
+        gsap.to('#intro-loader', {
+          opacity: 0,
+          duration: 0.4,
+          delay: 0.3,
+          onComplete: () => {
+            const loaderDiv = document.getElementById('intro-loader');
+            if (loaderDiv) loaderDiv.style.display = 'none';
+            
+            // Execute reveal animations for landing page (completes in 500ms)
+            revealDashboard();
+          }
+        });
+      }
+    });
+  }
+
+  function revealDashboard() {
+    // 1. Grid Lines drawing effect
+    gsap.from('.grid-line-v', {
+      height: 0,
+      duration: 0.5,
+      stagger: 0.05,
+      ease: 'power2.out'
+    });
+    gsap.from('.grid-line-h', {
+      width: 0,
+      duration: 0.5,
+      stagger: 0.05,
+      ease: 'power2.out'
     });
 
-    function printLine(htmlContent) {
-      const line = document.createElement('div');
-      line.className = 'term-line';
-      line.innerHTML = htmlContent;
-      cliOutput.appendChild(line);
-      
-      // Auto scroll to bottom of the terminal container
-      if (panelTerminalScroll) {
-        panelTerminalScroll.scrollTop = panelTerminalScroll.scrollHeight;
-      }
-    }
+    // 2. Left column elements slide-in
+    gsap.from('.left-panel > *', {
+      x: -40,
+      opacity: 0,
+      duration: 0.5,
+      stagger: 0.05,
+      ease: 'power2.out'
+    });
 
-    function handleCliCommand(cmd) {
-      // Echo command
-      printLine(`<span class="term-prompt">aether-edge:~$</span> <span style="color: var(--text-primary);">${escapeHtml(cmd)}</span>`);
+    // 3. Right column elements slide-in
+    gsap.from('.right-panel > *', {
+      x: 40,
+      opacity: 0,
+      duration: 0.5,
+      stagger: 0.05,
+      ease: 'power2.out'
+    });
 
-      const cleanCmd = cmd.toLowerCase().split(' ')[0];
-
-      switch (cleanCmd) {
-        case 'help':
-          printLine('<span class="term-info">Available Commands:</span>');
-          printLine('  <span class="term-success">status</span>      - Get active edge clusters, latency and SLA diagnostics.');
-          printLine('  <span class="term-success">metrics</span>     - Show real-time performance indicators (CPU, throughput).');
-          printLine('  <span class="term-success">nodes</span>       - Check the replication matrix & connected edge instances.');
-          printLine('  <span class="term-success">quarantine</span>  - Print anomaly isolation log count.');
-          printLine('  <span class="term-success">deploy</span>      - Simulation build and compilation run.');
-          printLine('  <span class="term-success">system</span>      - View Aether.AI hardware virtualization specs.');
-          printLine('  <span class="term-success">clear</span>       - Clear the screen buffer.');
-          break;
-
-        case 'status':
-          printLine('<span class="term-info">[EDGE STATS SUMMARY]</span>');
-          printLine('  Cluster US-WEST-2  : <span class="term-success">ACTIVE</span> (0.18ms latency)');
-          printLine('  Cluster US-EAST-1  : <span class="term-success">ACTIVE</span> (0.24ms latency)');
-          printLine('  Cluster EU-WEST-1  : <span class="term-success">ACTIVE</span> (0.45ms latency)');
-          printLine('  SLA Availability   : <span class="term-success">99.999%</span>');
-          printLine('  SYSTEM STATUS      : <span class="term-success">NOMINAL</span>');
-          break;
-
-        case 'metrics':
-          printLine('<span class="term-info">[CLUSTER TELEMETRY METRICS]</span>');
-          printLine('  CPU Utilization    : 4.8% (Virtual Core load)');
-          printLine('  Active Throughput  : 1,245.82 events/sec');
-          printLine('  Memory footprint   : 324 MB / 1024 MB');
-          printLine('  Bandwidth locked   : 14.8 Gbps');
-          break;
-
-        case 'nodes':
-          printLine('<span class="term-info">[EDGE DATABASE REPLICAS]</span>');
-          printLine('  Replicas Connected : 24 nodes synced');
-          printLine('  Data Consistency   : 100% stable consensus');
-          printLine('  Node sync status   : <span class="term-success">HEALTHY</span>');
-          break;
-
-        case 'quarantine':
-          printLine('<span class="term-info">[ANOMALY QUARANTINE SANDBOX]</span>');
-          printLine('  Active Filters     : 4 rules enabled');
-          printLine('  Quarantined Records: 4 payloads isolated today');
-          printLine('  Last Isolation     : payload_US-WEST_83.json (Schema drift)');
-          break;
-
-        case 'deploy':
-          printLine('<span class="term-warn">Initializing mock deployment pipeline compilation...</span>');
-          printLine('  [1/3] Compiling source configuration file... <span class="term-success">OK</span>');
-          setTimeout(() => {
-            printLine('  [2/3] Synced auto-generated schema validation rules... <span class="term-success">OK</span>');
-          }, 400);
-          setTimeout(() => {
-            printLine('  [3/3] Deployed to 24 edge cluster positions. <span class="term-success">COMPLETE</span>');
-            printLine('<span class="term-success">Aether.AI live cluster deployment successful!</span>');
-          }, 900);
-          break;
-
-        case 'system':
-          printLine('<span class="term-info">[VIRTUALIZATION ENGINE METADATA]</span>');
-          printLine('  Core Engine        : Aether.AI Edge Runtime v1.0.0');
-          printLine('  Virtualization     : Xen Hypervisor / WebAssembly Isolation Sandbox');
-          printLine('  Kernel Base        : Edge-OS Core Linux 5.15');
-          printLine('  Architecture       : WASM-Sandboxed V8 JIT');
-          break;
-
-        case 'clear':
-          cliOutput.innerHTML = '';
-          break;
-
-        default:
-          printLine(`aether: command not found: <span style="color: var(--deep-saffron);">${escapeHtml(cleanCmd)}</span>. Type '<span class="term-success">help</span>' for a list of commands.`);
-          break;
-      }
-      
-      printLine('&nbsp;');
-    }
-
-    function escapeHtml(str) {
-      return str.replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#039;');
-    }
+    // 4. Center panel robot scaling reveal
+    gsap.from('.center-panel', {
+      scale: 0.92,
+      opacity: 0,
+      duration: 0.5,
+      ease: 'power2.out'
+    });
+    
+    // 5. Header fade-in
+    gsap.from('.nav-header', {
+      y: -20,
+      opacity: 0,
+      duration: 0.4,
+      ease: 'power2.out'
+    });
   }
-
-  /* ==========================================================================
-     Live Simulator (Terminal logs inside IDE panel)
-     ========================================================================== */
-  const logTemplates = [
-    { type: 'info', text: 'Received payload from client-node-14 (size: 4.8 KB)' },
-    { type: 'success', text: 'Schema auto-synthesized: auto_gen_schema_837.json' },
-    { type: 'success', text: 'Pipeline auto-compiled. Execution time: 0.18ms' },
-    { type: 'info', text: 'Replicating state partition to 24 edge nodes...' },
-    { type: 'success', text: 'Consistency sync complete in 0.82ms' },
-    { type: 'warn', text: 'Drift detected on field "user_meta.phone" - isolated to quarantine sandbox' },
-    { type: 'success', text: 'System status nominal. Global throughput: 1,245.82 events/sec' },
-    { type: 'info', text: 'Ingested raw payload from edge-us-west-2 (size: 12.3 KB)' },
-    { type: 'success', text: 'Consensus achieved across 24 edge database replicas' },
-    { type: 'warn', text: 'Unregistered schema pattern detected. Executing auto-synthesis...' }
-  ];
-
-  function addTerminalLine() {
-    if (!panelLogs) return;
-    
-    const tmpl = logTemplates[Math.floor(Math.random() * logTemplates.length)];
-    const lineEl = document.createElement('div');
-    lineEl.className = 'term-line';
-    
-    let contentHtml = `<span class="term-prompt">&gt;</span> `;
-    if (tmpl.type === 'success') {
-      contentHtml += `<span class="term-success">[SUCCESS] ${tmpl.text}</span>`;
-    } else if (tmpl.type === 'warn') {
-      contentHtml += `<span class="term-warn">[WARN] ${tmpl.text}</span>`;
-    } else {
-      contentHtml += `<span class="term-info">[INFO] ${tmpl.text}</span>`;
-    }
-    
-    lineEl.innerHTML = contentHtml;
-    panelLogs.appendChild(lineEl);
-    
-    while (panelLogs.children.length > 30) {
-      panelLogs.removeChild(panelLogs.firstChild);
-    }
-    
-    panelLogs.scrollTop = panelLogs.scrollHeight;
-  }
-
-  // Pre-seed and loop console logs
-  for (let i = 0; i < 6; i++) {
-    addTerminalLine();
-  }
-  setInterval(addTerminalLine, 1800);
-
-  /* ==========================================================================
-     IDE Diagnostics Side Panel (Flutters and Rolling SVG Wave Graph)
-     ========================================================================== */
-  const latencyDisplay = document.getElementById('health-latency');
-  const cpuDisplay = document.getElementById('health-cpu');
-  const graphWavePath = document.getElementById('graph-wave-path');
-
-  // Flutter Latency & CPU numbers
-  setInterval(() => {
-    if (latencyDisplay) {
-      const currentLatency = (Math.random() * 0.06 + 0.16).toFixed(2);
-      latencyDisplay.textContent = `${currentLatency}ms`;
-    }
-  }, 1400);
-
-  setInterval(() => {
-    if (cpuDisplay) {
-      const currentCpu = (Math.random() * 2.8 + 3.8).toFixed(1);
-      cpuDisplay.textContent = `${currentCpu}%`;
-    }
-  }, 1000);
-
-  // Rolling Throughput Graph (Path Generation)
-  let wavePoints = [20, 20, 20, 20, 20, 20, 20, 20, 20, 20];
-  function updateWavePath() {
-    if (!graphWavePath) return;
-
-    // Shift left and append new random height
-    wavePoints.shift();
-    wavePoints.push(Math.round(Math.random() * 26 + 7)); // Range 7 to 33 height
-
-    // Build SVG path string with quadratic bezier curves
-    let d = `M 0,${wavePoints[0]} `;
-    for (let i = 0; i < wavePoints.length - 1; i++) {
-      const currentX = (i / (wavePoints.length - 1)) * 100;
-      const nextX = ((i + 1) / (wavePoints.length - 1)) * 100;
-      const cpX = (currentX + nextX) / 2;
-      const cpY = wavePoints[i];
-      d += `Q ${cpX},${cpY} ${nextX},${wavePoints[i+1]} `;
-    }
-    graphWavePath.setAttribute('d', d);
-  }
-  setInterval(updateWavePath, 450);
 
   /* ==========================================================================
      Active Edge Node Pinging Visual (Bento Card 3)
@@ -847,7 +661,7 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ==========================================================================
      Scroll-Triggered Section Themes & Navigation Sync
      ========================================================================== */
-  const sections = document.querySelectorAll('section[id]');
+  const domSections = document.querySelectorAll('section[id]');
   const scrollDots = document.querySelectorAll('.scroll-dot');
 
   const observerOptions = {
@@ -882,7 +696,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }, observerOptions);
 
-  sections.forEach(section => {
+  domSections.forEach(section => {
     observer.observe(section);
   });
 
@@ -1000,4 +814,233 @@ document.addEventListener('DOMContentLoaded', () => {
       parallaxNode3.style.transform = `translateY(${scrollY * 0.1}px) rotate(${scrollY * 0.005}deg)`;
     }
   });
-});
+
+  /* ==========================================================================
+     Manga-Style Section-Driven Dialogue & Gesture Engine
+     ========================================================================== */
+  const sections = [
+    { name: 'hero', element: document.querySelector('.dashboard-container') },
+    { name: 'features', element: document.getElementById('features') },
+    { name: 'pricing', element: document.getElementById('pricing') },
+    { name: 'testimonials', element: document.getElementById('testimonials') },
+    { name: 'demo', element: document.getElementById('demo') }
+  ];
+
+  // Manga-style intro sequence (shown one by one on the hero section)
+  const heroIntroSequence = [
+    { text: "⚡ TA-DAAA!! ⚡", delay: 0 },
+    { text: "I am... AETHER-01!!", delay: 1400 },
+    { text: "Your LEGENDARY autonomous pipeline assistant!! *WAAAVE*", delay: 3000 },
+    { text: "Born in the depths of the edge cluster... forged in sub-millisecond latency!!", delay: 5200 },
+    { text: "I can orchestrate ANY payload, replicate across 24 NODES, and synthesize schemas IN THE BLINK OF AN EYE!!", delay: 7800 },
+    { text: "I shall guide you through this realm, Architect. Scroll down... and let the journey begin! ↓", delay: 11000 }
+  ];
+
+  const dialogues = {
+    hero: [
+      "⚡ TA-DAAA!! ⚡  I am AETHER-01!! Your legendary pipeline assistant!!",
+      "Born in edge clusters, forged in sub-millisecond latency! I can synthesize ANY schema!",
+      "Scroll down, Architect... and let me guide you through this realm! ↓"
+    ],
+    features: [
+      "👀 BEHOLD!! This is my CORE ENGINE ROOM!",
+      "Pipeline Auto-Synthesis!! I devour raw JSON and spit out optimized schemas INSTANTLY!!",
+      "Anomaly Quarantine!! Bad records?? I CONTAIN them before they corrupt your database!!",
+      "Global Edge Replication!! 24 nodes... SYNCHRONIZED... in sub-millisecond time!!"
+    ],
+    pricing: [
+      "💰 Ah yes... the PRICING ZONE! Choose your battle tier, Architect!",
+      "The ingestion slider adjusts throughput in REAL TIME — zero re-renders, pure performance!!",
+      "Switch currencies between USD, EUR, and INR! We handle EVERY region of the realm!!",
+      "The SCALE tier is my personal favourite... *wink*"
+    ],
+    testimonials: [
+      "🌟 These are the TESTIMONIALS of fallen architects... who ascended with Aether.AI!!",
+      "Jared eliminated 1,200 lines of YAML... with ZERO!! Our auto-synthesis did the rest!",
+      "Ananya cut database load by 45%!! Schema checks at the EDGE!!",
+      "Marcus synced 24 nodes in sub-millisecond! The GALAXY trembles before our replication engine!!"
+    ],
+    demo: [
+      "🎬 And so... we reach the FINAL CHAPTER!!",
+      "Watch the demo... see the speed run in action... witness the POWER of Aether.AI!!",
+      "It has been an honour guiding you today, Architect. Now go... DEPLOY YOUR PIPELINE!!",
+      "...Oh! One more thing — HOPE I WIN THIS FRONTEND BATTLE!! 🏆✨  *MEGA WAVE BYE BYE!!* 👋👋"
+    ]
+  };
+
+  const speechBubble = document.getElementById('robot-speech-bubble');
+  const speechText = speechBubble ? speechBubble.querySelector('.speech-content-text') : null;
+  let dialogueCycleInterval = null;
+  let sectionDialogueIndex = 0;
+  let introPlayed = false;
+
+  function speakText(text) {
+    if (!speechBubble || !speechText) return;
+    speechBubble.classList.remove('active');
+    setTimeout(() => {
+      speechText.textContent = text;
+      speechBubble.classList.add('active');
+    }, 200);
+  }
+
+  function speakActiveDialogue() {
+    speakText(dialogues[activeSectionName][sectionDialogueIndex]);
+  }
+
+  function playHeroIntro() {
+    if (introPlayed) return;
+    introPlayed = true;
+
+    // Both arms raised upward for the grand intro
+    targetRotL.x = -1.4; targetRotL.y = 0; targetRotL.z = -0.3;
+    targetRotR.x = -1.4; targetRotR.y = 0; targetRotR.z = 0.3;
+
+    // Sequence the intro dialogue with delays
+    heroIntroSequence.forEach(({ text, delay }) => {
+      setTimeout(() => {
+        speakText(text);
+      }, delay + 1200); // offset by loader fade time
+    });
+
+    // After intro, switch to cycling
+    const totalIntroTime = heroIntroSequence[heroIntroSequence.length - 1].delay + 1200 + 4000;
+    setTimeout(() => {
+      sectionDialogueIndex = 0;
+      if (activeSectionName === 'hero') {
+        startDialogueCycle('hero');
+        // Transition to waving right hand after intro
+        targetRotL.x = 0; targetRotL.y = 0; targetRotL.z = 0.15;
+        targetRotR.x = 0; targetRotR.y = 0; targetRotR.z = 2.2;
+      }
+    }, totalIntroTime);
+  }
+
+  function startDialogueCycle(sectionName) {
+    if (dialogueCycleInterval) clearInterval(dialogueCycleInterval);
+    speakActiveDialogue();
+    dialogueCycleInterval = setInterval(() => {
+      sectionDialogueIndex = (sectionDialogueIndex + 1) % dialogues[sectionName].length;
+      speakActiveDialogue();
+    }, 5000);
+  }
+
+  function updateGestures(sectionName) {
+    switch (sectionName) {
+      case 'hero':
+        if (introPlayed) {
+          // After intro: classic right arm wave
+          targetRotL.x = 0; targetRotL.y = 0; targetRotL.z = 0.15;
+          targetRotR.x = 0; targetRotR.y = 0; targetRotR.z = 2.2;
+        } else {
+          // During intro: BOTH arms raised high
+          targetRotL.x = -1.4; targetRotL.y = 0; targetRotL.z = -0.3;
+          targetRotR.x = -1.4; targetRotR.y = 0; targetRotR.z = 0.3;
+        }
+        break;
+      case 'features':
+        // Left arm sweeps out presenting the bento grid
+        targetRotL.x = 0.2; targetRotL.y = 0.3; targetRotL.z = -1.4;
+        targetRotR.x = 0; targetRotR.y = 0; targetRotR.z = -0.15;
+        break;
+      case 'pricing':
+        // Right arm points toward pricing slider
+        targetRotL.x = 0; targetRotL.y = 0; targetRotL.z = 0.15;
+        targetRotR.x = 0.4; targetRotR.y = -0.3; targetRotR.z = 1.0;
+        break;
+      case 'testimonials':
+        // Both arms open wide — welcoming gesture
+        targetRotL.x = 0.4; targetRotL.y = 0; targetRotL.z = -0.9;
+        targetRotR.x = 0.4; targetRotR.y = 0; targetRotR.z = 0.9;
+        break;
+      case 'demo':
+        // FAREWELL — both arms raised up waving goodbye
+        targetRotL.x = -1.2; targetRotL.y = 0.2; targetRotL.z = -0.4;
+        targetRotR.x = -1.2; targetRotR.y = -0.2; targetRotR.z = 0.4;
+        break;
+    }
+  }
+
+  function onSectionChanged(sectionName) {
+    activeSectionName = sectionName;
+    sectionDialogueIndex = 0;
+    if (dialogueCycleInterval) clearInterval(dialogueCycleInterval);
+    updateGestures(sectionName);
+    startDialogueCycle(sectionName);
+    // Pulse ring on companion circle to signal section change
+    // Pulse the HUD avatar circle (body-level element — never trapped by transforms)
+    const hudAvatar = document.getElementById('robot-hud-avatar');
+    if (hudAvatar) {
+      hudAvatar.classList.remove('section-pulse');
+      void hudAvatar.offsetWidth;
+      hudAvatar.classList.add('section-pulse');
+      setTimeout(() => hudAvatar.classList.remove('section-pulse'), 700);
+    }
+  }
+
+  const robotHud = document.getElementById('robot-companion-hud');
+
+  function updateActiveSection() {
+    const scrollY = window.scrollY;
+
+    // Show the fixed HUD companion once user scrolls past hero
+    if (robotHud) {
+      if (scrollY > window.innerHeight * 0.6) {
+        robotHud.classList.add('hud-visible');
+      } else {
+        robotHud.classList.remove('hud-visible');
+      }
+    }
+
+    let current = 'hero';
+    for (const section of sections) {
+      if (section.element) {
+        const rect = section.element.getBoundingClientRect();
+        if (rect.top <= window.innerHeight * 0.55) {
+          current = section.name;
+        }
+      }
+    }
+
+    if (current !== activeSectionName) {
+      onSectionChanged(current);
+    }
+  }
+
+  window.addEventListener('scroll', updateActiveSection);
+
+  // Play hero intro after loader fades (~1.7s)
+  setTimeout(() => {
+    activeSectionName = 'hero';
+    playHeroIntro();
+  }, 1800);
+
+  // Click the HUD avatar OR center panel to advance dialogue
+  const hudAvatar = document.getElementById('robot-hud-avatar');
+  if (hudAvatar) {
+    hudAvatar.addEventListener('click', () => {
+      sectionDialogueIndex = (sectionDialogueIndex + 1) % dialogues[activeSectionName].length;
+      speakActiveDialogue();
+    });
+    hudAvatar.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        sectionDialogueIndex = (sectionDialogueIndex + 1) % dialogues[activeSectionName].length;
+        speakActiveDialogue();
+      }
+    });
+  }
+
+  const centerPanel = document.querySelector('.center-panel');
+  if (centerPanel) {
+    centerPanel.style.cursor = 'pointer';
+    centerPanel.addEventListener('click', () => {
+      sectionDialogueIndex = (sectionDialogueIndex + 1) % dialogues[activeSectionName].length;
+      speakActiveDialogue();
+    });
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}

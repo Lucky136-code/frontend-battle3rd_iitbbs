@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
     <!-- SEO Hygiene Metadata -->
-    <title>Aether.AI | Next-Gen AI Data Ingestion & Pipeline Orchestration</title>
-    <meta name="description" content="Deploy autonomous, edge-replicated AI data validation and ingestion pipelines with sub-millisecond latency. Zero manual mapping, completely serverless." />
-    <meta name="keywords" content="AI data pipeline, edge database, real-time ingestion, schema synthesis, developer SaaS, data automation" />
+    <title>Aether.AI | Next-Generation AI-Driven Data Automation Platform</title>
+    <meta name="description" content="Deploy autonomous, zero-latency pipeline automation and regionalized edge synchronization with Aether.AI." />
+    <meta name="keywords" content="Data Ingestion, Aether.AI, AI Data Automation, Pipeline Orchestration, Edge Replication, Anomaly Quarantine" />
     
     <!-- Open Graph (OG) Tags -->
-    <meta property="og:title" content="Aether.AI | Next-Gen AI Data Ingestion & Pipeline Orchestration" />
-    <meta property="og:description" content="Deploy autonomous, edge-replicated AI data validation pipelines. Sub-millisecond schema synthesis and routing." />
+    <meta property="og:title" content="Aether.AI | Next-Generation AI-Driven Data Automation Platform" />
+    <meta property="og:description" content="Deploy autonomous, zero-latency pipeline automation and regionalized edge synchronization with Aether.AI." />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="/og-image.png" />
     
@@ -22,8 +22,26 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- CSS Stylesheet -->
+    <link rel="stylesheet" href="/src/style.css" />
+
+    <!-- Three.js and GSAP Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   </head>
   <body>
+    <!-- Intro Splash Screen Loader -->
+    <div id="intro-loader">
+      <div class="loader-content">
+        <h1 class="loader-logo"><span class="loader-logo-glow">Aether</span><span>.AI</span></h1>
+        <div class="loader-bar">
+          <div class="loader-progress"></div>
+        </div>
+        <span class="loader-status">INITIALIZING CORE DATA PIPELINES...</span>
+      </div>
+    </div>
+
     <!-- Premium Neon Glow Background Orbs -->
     <div class="bg-glow-container" aria-hidden="true">
       <div class="glow-orb glow-orb-1"></div>
@@ -86,32 +104,26 @@
     <header class="nav-header" id="main-header">
       <div class="container nav-container">
         <a href="#hero" class="logo-link" id="nav-logo" aria-label="Aether.AI home">
-          <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="24" height="24" aria-hidden="true">
-            <path fill="currentColor" d="M8.372 1.349a.75.75 0 0 0-.744 0l-4.81 2.748L8 7.131l5.182-3.034zM14 5.357L8.75 8.43v6.005l4.872-2.784A.75.75 0 0 0 14 11zm-6.75 9.078V8.43L2 5.357V11c0 .27.144.518.378.651z"/>
+          <svg class="logo-icon" viewBox="0 0 24 24" width="30" height="30" aria-hidden="true" style="fill: none; stroke: currentColor; stroke-width: 2;">
+            <rect x="2" y="2" width="20" height="20" rx="6" fill="#172B36" stroke="var(--forsythia)" stroke-width="2"/>
+            <circle cx="10" cy="12" r="4" stroke="var(--deep-saffron)" stroke-width="2"/>
+            <path d="M14 8 a4 4 0 0 1 4 4" stroke="var(--mystic-mint)" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="10" cy="12" r="1" fill="#fff"/>
           </svg>
-          <span>Aether.AI</span>
+          <span style="font-weight: 800; letter-spacing: -0.02em;">Aether<span style="color: var(--forsythia);">.AI</span></span>
         </a>
         
         <nav class="nav-links" aria-label="Main Navigation">
           <a href="#features">Features</a>
           <a href="#pricing">Pricing</a>
           <a href="#testimonials">Reviews</a>
-          <a href="#demo">Demo</a>
+          <a href="#demo">Demo Video</a>
         </nav>
         
         <div class="header-actions">
-          <div class="select-wrapper">
-            <select class="currency-select" id="currency-select" aria-label="Change currency">
-              <option value="USD">USD ($)</option>
-              <option value="EUR">EUR (€)</option>
-              <option value="INR">INR (₹)</option>
-            </select>
-            <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
-              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m19.5 8.25l-7.5 7.5l-7.5-7.5"/>
-            </svg>
-          </div>
-          
-          <a href="#pricing" class="btn btn-primary">Get Started</a>
+          <a href="#pricing" class="btn btn-launch-dapp">
+            <span class="dapp-dots">••</span> DEPLOY PIPELINE
+          </a>
         </div>
       </div>
     </header>
@@ -119,155 +131,106 @@
     <main id="main-content">
       
       <!-- Hero Section -->
-      <section class="hero-section" id="hero">
-        <!-- Interactive Mouse-Tracking Particle Canvas -->
-        <canvas id="hero-canvas"></canvas>
+      <section class="hero-section dashboard-hero" id="hero">
+        <!-- Background Grid Lines -->
+        <div class="dashboard-grid-lines" aria-hidden="true">
+          <div class="grid-line-v v-1"></div>
+          <div class="grid-line-v v-2"></div>
+          <div class="grid-line-v v-3"></div>
+          <div class="grid-line-v v-4"></div>
+          <div class="grid-line-h h-1"></div>
+          <div class="grid-line-h h-2"></div>
+          <div class="grid-line-h h-3"></div>
+        </div>
 
-        <div class="container">
-          <div class="hero-badge">
-            <span class="badge-dot"></span>
-            <span>Early Access Beta Live</span>
-          </div>
+        <div class="dashboard-container">
           
-          <h1 class="hero-title">Automate raw data streams. <span>Instantly.</span></h1>
-          
-          <p class="hero-subtitle">
-            Aether.AI compiles, validates, and routes multi-dimensional data pipelines at the edge. 
-            Zero configuration. Sub-millisecond latency. Engineered for modern developers.
-          </p>
-          
-          <div class="hero-ctas">
-            <a href="#pricing" class="btn btn-primary">Deploy Pipeline Free</a>
-            <a href="#demo" class="btn btn-secondary">Watch Showcase Demo</a>
-          </div>
+          <!-- Left Side Panel -->
+          <div class="dash-panel left-panel">
+            <!-- Quote Card -->
+            <div class="quote-card-container">
+              <div class="quote-icon-box">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M11.192 15.757c0-.907-.188-1.754-.565-2.54a5.72 5.72 0 0 0-1.502-2.036 5.84 5.84 0 0 0-2.222-1.258c-.896-.289-1.811-.433-2.744-.433H3.011v-1.63c0-1.214.347-2.233 1.042-3.056.695-.823 1.562-1.235 2.602-1.235h1.23v-2.04h-1.23c-1.63 0-3.003.626-4.118 1.878C1.422 6.666.866 8.232.866 10.126v8.423c0 1.01.353 1.868 1.058 2.573a3.506 3.506 0 0 0 2.573 1.058h4.111c1.01 0 1.868-.353 2.573-1.058a3.506 3.506 0 0 0 1.058-2.573V15.76zm11.83 0c0-.907-.188-1.754-.565-2.54a5.72 5.72 0 0 0-1.502-2.036 5.84 5.84 0 0 0-2.222-1.258c-.896-.289-1.811-.433-2.744-.433h-1.148v-1.63c0-1.214.347-2.233 1.042-3.056.695-.823 1.562-1.235 2.602-1.235h1.23v-2.04h-1.23c-1.63 0-3.003.626-4.118 1.878-1.113 1.252-1.669 2.818-1.669 4.712v8.423c0 1.01.353 1.868 1.058 2.573a3.506 3.506 0 0 0 2.573 1.058h4.111c1.01 0 1.868-.353 2.573-1.058a3.506 3.506 0 0 0 1.058-2.573V15.76z"/>
+                </svg>
+              </div>
+              <div class="quote-card-text">
+                AUTO-SYNTHESIZE SCHEMA FOR INCOMING PAYLOADS.
+              </div>
+            </div>
 
-          <!-- Rolling Stat Metrics (Apple / Sony style) -->
-          <div class="hero-stats scroll-reveal">
-            <div class="stat-item">
-              <div class="stat-num-row">
-                <span class="stat-number" id="stat-accuracy" data-target="99.99">0.00</span>
-                <span class="stat-unit">%</span>
-              </div>
-              <span class="stat-label">Ingestion Accuracy</span>
+            <!-- Prompt Link -->
+            <div class="prompt-link-box">
+              <a href="#" class="prompt-link-item">HOW TO REPLICATE DATA CONSISTENCY ACROSS 24 EDGE NODES?</a>
             </div>
-            <div class="stat-divider" aria-hidden="true"></div>
-            <div class="stat-item">
-              <div class="stat-num-row">
-                <span class="stat-number" id="stat-sla" data-target="0.18">0.00</span>
-                <span class="stat-unit">ms</span>
+
+            <!-- Bottom Left Tag -->
+            <div class="dash-bottom-tag">
+              <span class="unleash-text">UNLEASH THE POWER OF</span>
+              <div class="blockchain-ai-glow">
+                <div class="gradient-border-mask"></div>
+                <span class="glow-text">Pipeline AI</span>
               </div>
-              <span class="stat-label">Average Ingestion SLA</span>
-            </div>
-            <div class="stat-divider" aria-hidden="true"></div>
-            <div class="stat-item">
-              <div class="stat-num-row">
-                <span class="stat-number" id="stat-replicas" data-target="24">0</span>
-              </div>
-              <span class="stat-label">Edge Node Replicas</span>
             </div>
           </div>
 
-          <!-- Countdown Timer -->
-          <div class="countdown-box">
-            <span class="countdown-label">Beta Speed Run Window Closes In</span>
-            <span class="countdown-digits" id="countdown-timer">00:00:00:00</span>
-          </div>
-
-          <!-- Interactive Developer IDE Window Dashboard -->
-          <div class="ide-mockup glass tilt-card scroll-reveal">
-            <div class="ide-header">
-              <div class="ide-controls">
-                <span class="dot dot-red"></span>
-                <span class="dot dot-yellow"></span>
-                <span class="dot dot-green"></span>
-              </div>
-              <div class="ide-tabs">
-                <div class="ide-tab active" id="tab-editor" data-panel="editor">
-                  <svg class="ide-tab-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"><path d="M8.372 1.349a.75.75 0 0 0-.744 0l-4.81 2.748L8 7.131l5.182-3.034zM14 5.357L8.75 8.43v6.005l4.872-2.784A.75.75 0 0 0 14 11zm-6.75 9.078V8.43L2 5.357V11c0 .27.144.518.378.651z"/></svg>
-                  <span>aether_pipeline.js</span>
-                </div>
-                <div class="ide-tab" id="tab-logs" data-panel="logs">
-                  <svg class="ide-tab-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
-                  <span>live_stream.log</span>
-                </div>
-                <div class="ide-tab" id="tab-terminal" data-panel="terminal">
-                  <svg class="ide-tab-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect><path d="M4 17l6-6-6-6"></path><path d="M12 19h8"></path></svg>
-                  <span>aether_cli</span>
-                </div>
-              </div>
-              <div class="ide-status">
-                <span class="status-indicator"></span>
-                <span>STATUS: NOMINAL</span>
+          <!-- Center 3D Robot Panel -->
+          <div class="dash-panel center-panel">
+            <div id="robot-companion-wrapper">
+              <div id="robot-scene-container">
+                <canvas id="robot-canvas"></canvas>
               </div>
             </div>
-            
-            <div class="ide-body">
-              <!-- Left Pane (Editor / Terminal) -->
-              <div class="ide-left-pane" style="flex: 1; display: flex; flex-direction: column; min-height: 250px;">
-                <!-- Code Editor Panel (Tab 1) -->
-                <div class="code-panel" id="panel-editor">
-                  <div class="code-line"><span class="code-comment">// Aether.AI Auto-Ingest Schema Synthesis Definition</span></div>
-                  <div class="code-line"><span class="code-keyword">import</span> { AetherClient } <span class="code-keyword">from</span> <span class="code-string">'@aether/edge'</span>;</div>
-                  <div class="code-line"><span class="code-keyword">const</span> client = <span class="code-keyword">new</span> <span class="code-fn">AetherClient</span>({ token: process.env.AETHER_SECRET });</div>
-                  <div class="code-line">&nbsp;</div>
-                  <div class="code-line"><span class="code-keyword">export default</span> client.<span class="code-fn">synthesize</span>({</div>
-                  <div class="code-line">&nbsp;&nbsp;source: <span class="code-string">'kafka://events.telemetry.io'</span>,</div>
-                  <div class="code-line">&nbsp;&nbsp;partition: <span class="code-string">'geo-edge-us'</span>,</div>
-                  <div class="code-line">&nbsp;&nbsp;strategy: <span class="code-string">'dynamic-auto-schema'</span>,</div>
-                  <div class="code-line">&nbsp;&nbsp;validation: <span class="code-keyword">async</span> (payload) =&gt; {</div>
-                  <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// Live Anomaly Quarantine Filter Guard</span></div>
-                  <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">if</span> (!payload.device_id || payload.throughput &gt; <span class="code-number">10000</span>) {</div>
-                  <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">return</span> <span class="code-fn">quarantine</span>(payload, <span class="code-string">'Structural Anomaly'</span>);</div>
-                  <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;}</div>
-                  <div class="code-line">&nbsp;&nbsp;}</div>
-                  <div class="code-line">});</div>
-                </div>
-                
-                <!-- Console Logs Panel (Tab 2, Hidden by default) -->
-                <div class="terminal-panel" id="panel-logs" style="display: none;">
-                  <!-- Dynamically populated in main.js -->
-                </div>
-
-                <!-- Interactive Terminal Panel (Tab 3, Hidden by default) -->
-                <div class="terminal-panel" id="panel-terminal" style="display: none;">
-                  <div class="terminal-output" id="cli-output">
-                    <div class="term-line"><span class="term-prompt">aether-edge:~$</span> Aether.AI Interactive Command Shell v1.0.0</div>
-                    <div class="term-line"><span class="term-info">Type 'help' to see list of available commands.</span></div>
-                    <div class="term-line">&nbsp;</div>
-                  </div>
-                  <div class="terminal-input-row">
-                    <span class="term-prompt">aether-edge:~$</span>
-                    <input type="text" id="cli-input" class="cli-input-field" autocomplete="off" spellcheck="false" placeholder="type command here..." aria-label="Aether CLI command line input" />
-                  </div>
-                </div>
-              </div>
-
-              <!-- Right Diagnostics Panel -->
-              <div class="health-dashboard" id="ide-health">
-                <h4>Diagnostics</h4>
-                <div class="health-metric">
-                  <span class="health-label">Edge Cluster</span>
-                  <span class="health-val">US-WEST-2</span>
-                </div>
-                <div class="health-metric">
-                  <span class="health-label">Latency</span>
-                  <span class="health-val" id="health-latency">0.18ms</span>
-                </div>
-                <div class="health-metric">
-                  <span class="health-label">CPU Load</span>
-                  <span class="health-val" id="health-cpu">4.2%</span>
-                </div>
-                <div class="health-metric">
-                  <span class="health-label">Throughput</span>
-                  <div class="health-graph">
-                    <svg viewBox="0 0 100 40" preserveAspectRatio="none">
-                      <path class="graph-wave" id="graph-wave-path" d="M0,20 Q10,10 20,20 T40,20 T60,20 T80,20 T100,20" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
+            <div class="pedestal-caption">
+              Your autonomous assistant for edge-replicated AI data pipelines.
             </div>
           </div>
+
+          <!-- Right Side Panel -->
+          <div class="dash-panel right-panel">
+            <!-- Bullets List -->
+            <ul class="bullet-list-tech">
+              <li class="bullet-item-tech">
+                <span class="bullet-dot-glow"></span>
+                <span class="bullet-text-tech">AUTO-SYNTHESIS</span>
+              </li>
+              <li class="bullet-item-tech">
+                <span class="bullet-dot-glow"></span>
+                <span class="bullet-text-tech">ANOMALY QUARANTINE</span>
+              </li>
+              <li class="bullet-item-tech">
+                <span class="bullet-dot-glow"></span>
+                <span class="bullet-text-tech">EDGE REPLICATION</span>
+              </li>
+              <li class="bullet-item-tech-more">AND MUCH MORE</li>
+            </ul>
+
+            <!-- Far Right Indicators -->
+            <div class="far-right-indicators">
+              <span class="vertical-nav-label intro-label">INTRO</span>
+              <div class="indicator-dots-vertical">
+                <span class="ind-dot active"></span>
+                <span class="ind-dot"></span>
+                <span class="ind-dot"></span>
+                <span class="ind-dot"></span>
+                <span class="ind-dot"></span>
+              </div>
+              <span class="vertical-nav-label menu-label">MENU</span>
+            </div>
+
+            <!-- Scroll Indicator Box -->
+            <div class="scroll-down-wrapper">
+              <a href="#features" class="scroll-down-btn">
+                <span class="scroll-text">SCROLL</span>
+                <div class="scroll-arrow-box">
+                  <svg class="scroll-arrow-svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19.5 8.25l-7.5 7.5l-7.5-7.5"/>
+                  </svg>
+                </div>
+              </a>
+            </div>
+          </div>
+
         </div>
       </section>
 
@@ -468,12 +431,24 @@
           </div>
 
           <div class="pricing-controls">
-            <!-- Billing Switch Toggle -->
-            <div class="billing-switcher" id="billing-switcher" aria-label="Toggle billing cycle">
-              <span class="cycle-option active" data-cycle="monthly">Monthly</span>
-              <span class="cycle-option" data-cycle="annual">
-                Annual <span class="discount-tag">20% Off</span>
-              </span>
+            <!-- Billing Switch Toggle & Currency Switcher Group -->
+            <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap; justify-content: center;">
+              <!-- Billing Switch Toggle -->
+              <div class="billing-switcher" id="billing-switcher" aria-label="Toggle billing cycle">
+                <span class="cycle-option active" data-cycle="monthly">Monthly</span>
+                <span class="cycle-option" data-cycle="annual">
+                  Annual <span class="discount-tag">20% Off</span>
+                </span>
+              </div>
+
+              <!-- Currency Switcher Select -->
+              <div class="currency-switcher-wrapper">
+                <select id="currency-select" class="pricing-select" aria-label="Select currency">
+                  <option value="USD">USD ($)</option>
+                  <option value="EUR">EUR (€)</option>
+                  <option value="INR">INR (₹)</option>
+                </select>
+              </div>
             </div>
             
             <!-- Ingest Volume Range Slider -->
@@ -772,5 +747,21 @@
 
     <!-- Main Hydration & Interactive Controller Script -->
     <script type="module" src="/src/main.js"></script>
+
+    <!-- Robot Companion HUD: body-level fixed overlay so it is NEVER trapped by ancestor transforms -->
+    <div id="robot-companion-hud" aria-live="polite" aria-label="Robot companion guide">
+      <div class="robot-speech-bubble" id="robot-speech-bubble">
+        <span class="speech-content-text">SYSTEM ONLINE... STANDBY FOR DATA REVOLUTION!</span>
+      </div>
+      <div id="robot-hud-avatar" role="button" tabindex="0" aria-label="Click to advance robot dialogue">
+        <!-- Mini manga robot face -->
+        <div class="hud-screen">
+          <span class="hud-eye hud-eye-l"></span>
+          <span class="hud-eye hud-eye-r"></span>
+        </div>
+        <div class="hud-antenna"></div>
+        <div class="hud-chest-led"></div>
+      </div>
+    </div>
   </body>
 </html>

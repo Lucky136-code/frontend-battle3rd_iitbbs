@@ -384,23 +384,162 @@ document.addEventListener('DOMContentLoaded', () => {
      ========================================================================== */
   const tabEditor = document.getElementById('tab-editor');
   const tabLogs = document.getElementById('tab-logs');
+  const tabTerminal = document.getElementById('tab-terminal');
   const panelEditor = document.getElementById('panel-editor');
   const panelLogs = document.getElementById('panel-logs');
+  const panelTerminal = document.getElementById('panel-terminal');
 
-  if (tabEditor && tabLogs && panelEditor && panelLogs) {
+  if (tabEditor && tabLogs && tabTerminal && panelEditor && panelLogs && panelTerminal) {
     tabEditor.addEventListener('click', () => {
       tabEditor.classList.add('active');
       tabLogs.classList.remove('active');
+      tabTerminal.classList.remove('active');
       panelEditor.style.display = 'block';
       panelLogs.style.display = 'none';
+      panelTerminal.style.display = 'none';
     });
 
     tabLogs.addEventListener('click', () => {
       tabLogs.classList.add('active');
       tabEditor.classList.remove('active');
+      tabTerminal.classList.remove('active');
       panelLogs.style.display = 'block';
       panelEditor.style.display = 'none';
+      panelTerminal.style.display = 'none';
     });
+
+    tabTerminal.addEventListener('click', () => {
+      tabTerminal.classList.add('active');
+      tabEditor.classList.remove('active');
+      tabLogs.classList.remove('active');
+      panelTerminal.style.display = 'flex'; // Uses flex layout for input alignment
+      panelEditor.style.display = 'none';
+      panelLogs.style.display = 'none';
+      // Automatically focus terminal input
+      const cliInput = document.getElementById('cli-input');
+      if (cliInput) cliInput.focus();
+    });
+  }
+
+  /* ==========================================================================
+     Interactive Terminal Shell (Aether CLI)
+     ========================================================================== */
+  const cliInput = document.getElementById('cli-input');
+  const cliOutput = document.getElementById('cli-output');
+  const panelTerminalScroll = document.getElementById('panel-terminal');
+
+  if (cliInput && cliOutput) {
+    cliInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const command = cliInput.value.trim();
+        cliInput.value = ''; // Clear input
+
+        if (command) {
+          handleCliCommand(command);
+        }
+      }
+    });
+
+    function printLine(htmlContent) {
+      const line = document.createElement('div');
+      line.className = 'term-line';
+      line.innerHTML = htmlContent;
+      cliOutput.appendChild(line);
+      
+      // Auto scroll to bottom of the terminal container
+      if (panelTerminalScroll) {
+        panelTerminalScroll.scrollTop = panelTerminalScroll.scrollHeight;
+      }
+    }
+
+    function handleCliCommand(cmd) {
+      // Echo command
+      printLine(`<span class="term-prompt">aether-edge:~$</span> <span style="color: var(--text-primary);">${escapeHtml(cmd)}</span>`);
+
+      const cleanCmd = cmd.toLowerCase().split(' ')[0];
+
+      switch (cleanCmd) {
+        case 'help':
+          printLine('<span class="term-info">Available Commands:</span>');
+          printLine('  <span class="term-success">status</span>      - Get active edge clusters, latency and SLA diagnostics.');
+          printLine('  <span class="term-success">metrics</span>     - Show real-time performance indicators (CPU, throughput).');
+          printLine('  <span class="term-success">nodes</span>       - Check the replication matrix & connected edge instances.');
+          printLine('  <span class="term-success">quarantine</span>  - Print anomaly isolation log count.');
+          printLine('  <span class="term-success">deploy</span>      - Simulation build and compilation run.');
+          printLine('  <span class="term-success">system</span>      - View Aether.AI hardware virtualization specs.');
+          printLine('  <span class="term-success">clear</span>       - Clear the screen buffer.');
+          break;
+
+        case 'status':
+          printLine('<span class="term-info">[EDGE STATS SUMMARY]</span>');
+          printLine('  Cluster US-WEST-2  : <span class="term-success">ACTIVE</span> (0.18ms latency)');
+          printLine('  Cluster US-EAST-1  : <span class="term-success">ACTIVE</span> (0.24ms latency)');
+          printLine('  Cluster EU-WEST-1  : <span class="term-success">ACTIVE</span> (0.45ms latency)');
+          printLine('  SLA Availability   : <span class="term-success">99.999%</span>');
+          printLine('  SYSTEM STATUS      : <span class="term-success">NOMINAL</span>');
+          break;
+
+        case 'metrics':
+          printLine('<span class="term-info">[CLUSTER TELEMETRY METRICS]</span>');
+          printLine('  CPU Utilization    : 4.8% (Virtual Core load)');
+          printLine('  Active Throughput  : 1,245.82 events/sec');
+          printLine('  Memory footprint   : 324 MB / 1024 MB');
+          printLine('  Bandwidth locked   : 14.8 Gbps');
+          break;
+
+        case 'nodes':
+          printLine('<span class="term-info">[EDGE DATABASE REPLICAS]</span>');
+          printLine('  Replicas Connected : 24 nodes synced');
+          printLine('  Data Consistency   : 100% stable consensus');
+          printLine('  Node sync status   : <span class="term-success">HEALTHY</span>');
+          break;
+
+        case 'quarantine':
+          printLine('<span class="term-info">[ANOMALY QUARANTINE SANDBOX]</span>');
+          printLine('  Active Filters     : 4 rules enabled');
+          printLine('  Quarantined Records: 4 payloads isolated today');
+          printLine('  Last Isolation     : payload_US-WEST_83.json (Schema drift)');
+          break;
+
+        case 'deploy':
+          printLine('<span class="term-warn">Initializing mock deployment pipeline compilation...</span>');
+          printLine('  [1/3] Compiling source configuration file... <span class="term-success">OK</span>');
+          setTimeout(() => {
+            printLine('  [2/3] Synced auto-generated schema validation rules... <span class="term-success">OK</span>');
+          }, 400);
+          setTimeout(() => {
+            printLine('  [3/3] Deployed to 24 edge cluster positions. <span class="term-success">COMPLETE</span>');
+            printLine('<span class="term-success">Aether.AI live cluster deployment successful!</span>');
+          }, 900);
+          break;
+
+        case 'system':
+          printLine('<span class="term-info">[VIRTUALIZATION ENGINE METADATA]</span>');
+          printLine('  Core Engine        : Aether.AI Edge Runtime v1.0.0');
+          printLine('  Virtualization     : Xen Hypervisor / WebAssembly Isolation Sandbox');
+          printLine('  Kernel Base        : Edge-OS Core Linux 5.15');
+          printLine('  Architecture       : WASM-Sandboxed V8 JIT');
+          break;
+
+        case 'clear':
+          cliOutput.innerHTML = '';
+          break;
+
+        default:
+          printLine(`aether: command not found: <span style="color: var(--deep-saffron);">${escapeHtml(cleanCmd)}</span>. Type '<span class="term-success">help</span>' for a list of commands.`);
+          break;
+      }
+      
+      printLine('&nbsp;');
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+    }
   }
 
   /* ==========================================================================

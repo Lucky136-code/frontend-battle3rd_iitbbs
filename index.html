@@ -190,6 +190,10 @@
                   <svg class="ide-tab-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
                   <span>live_stream.log</span>
                 </div>
+                <div class="ide-tab" id="tab-terminal" data-panel="terminal">
+                  <svg class="ide-tab-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect><path d="M4 17l6-6-6-6"></path><path d="M12 19h8"></path></svg>
+                  <span>aether_cli</span>
+                </div>
               </div>
               <div class="ide-status">
                 <span class="status-indicator"></span>
@@ -222,6 +226,19 @@
                 <!-- Console Logs Panel (Tab 2, Hidden by default) -->
                 <div class="terminal-panel" id="panel-logs" style="display: none;">
                   <!-- Dynamically populated in main.js -->
+                </div>
+
+                <!-- Interactive Terminal Panel (Tab 3, Hidden by default) -->
+                <div class="terminal-panel" id="panel-terminal" style="display: none;">
+                  <div class="terminal-output" id="cli-output">
+                    <div class="term-line"><span class="term-prompt">aether-edge:~$</span> Aether.AI Interactive Command Shell v1.0.0</div>
+                    <div class="term-line"><span class="term-info">Type 'help' to see list of available commands.</span></div>
+                    <div class="term-line">&nbsp;</div>
+                  </div>
+                  <div class="terminal-input-row">
+                    <span class="term-prompt">aether-edge:~$</span>
+                    <input type="text" id="cli-input" class="cli-input-field" autocomplete="off" spellcheck="false" placeholder="type command here..." aria-label="Aether CLI command line input" />
+                  </div>
                 </div>
               </div>
 

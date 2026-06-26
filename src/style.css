@@ -701,12 +701,47 @@ nav.nav-links a:hover::after {
 
 .term-line {
   margin-bottom: 4px;
+  word-break: break-all;
 }
 
 .term-prompt { color: var(--text-secondary); margin-right: 8px; }
 .term-success { color: #10B981; }
 .term-warn { color: var(--deep-saffron); }
 .term-info { color: #3B82F6; }
+
+.terminal-input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  width: 100%;
+}
+
+.cli-input-field {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--forsythia);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  flex: 1;
+  caret-color: var(--forsythia);
+  padding: 0;
+  margin: 0;
+}
+
+#panel-terminal {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow-y: hidden !important;
+}
+
+.terminal-output {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 8px;
+}
 
 /* Section Common Styles */
 section {

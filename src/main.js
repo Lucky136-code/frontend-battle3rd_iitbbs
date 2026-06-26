@@ -45,11 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
       height = canvas.height = canvas.offsetHeight;
     });
 
-    const particles = [];
-    const particleCount = 45;
-    const maxDistance = 110;
-    
-    let mouse = { x: null, y: null, targetX: null, targetY: null };
+    let mouse = { x: width / 2, y: height / 2, targetX: width / 2, targetY: height / 2 };
     
     const heroSection = document.getElementById('hero');
     if (heroSection) {
@@ -58,105 +54,262 @@ document.addEventListener('DOMContentLoaded', () => {
         mouse.targetX = e.clientX - rect.left;
         mouse.targetY = e.clientY - rect.top;
       });
-      
       heroSection.addEventListener('mouseleave', () => {
-        mouse.targetX = null;
-        mouse.targetY = null;
+        mouse.targetX = width / 2;
+        mouse.targetY = height / 2;
       });
     }
 
-    // Initialize particles
+    // Initialize 3D Sphere Particles (Fibonacci distribution)
+    const particles = [];
+    const particleCount = 110;
+    
+    // Config values based on screen size
+    let isMobile = window.innerWidth <= 768;
+    let sphereRadius = isMobile ? 120 : 210;
+    
+    window.addEventListener('resize', () => {
+      isMobile = window.innerWidth <= 768;
+      sphereRadius = isMobile ? 120 : 210;
+    });
+
     for (let i = 0; i < particleCount; i++) {
+      const y = 1 - (i / (particleCount - 1)) * 2;
+      const radiusAtY = Math.sqrt(1 - y * y);
+      const theta = i * 2.39996; // Golden angle
+      
       particles.push({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.4,
-        vy: (Math.random() - 0.5) * 0.4,
-        r: Math.random() * 2 + 1,
-        color: i % 2 === 0 ? 'rgba(255, 200, 1, 0.4)' : 'rgba(255, 154, 50, 0.4)'
+        x: Math.cos(theta) * radiusAtY * sphereRadius,
+        y: y * sphereRadius,
+        z: Math.sin(theta) * radiusAtY * sphereRadius,
+        baseX: Math.cos(theta) * radiusAtY,
+        baseY: y,
+        baseZ: Math.sin(theta) * radiusAtY,
+        pulseSpeed: 0.02 + Math.random() * 0.03,
+        pulsePhase: Math.random() * Math.PI * 2
       });
     }
 
-    function animateParticles() {
+    // Define 3D wireframe connection indices
+    const connections = [];
+    for (let i = 0; i < particleCount; i++) {
+      if (i < particleCount - 1) connections.push([i, i + 1]);
+      if (i < particleCount - 6) connections.push([i, i + 6]);
+      if (i < particleCount - 12) connections.push([i, i + 12]);
+    }
+
+    // Telemetry labels to draw (Jarvis overlay)
+    const telemetryTexts = [
+      "AETHER // EDGE_01",
+      "STATUS: ACTIVE",
+      "LATENCY: 0.18ms",
+      "SLA: 99.99%",
+      "REPLICAS: 24",
+      "INGEST_SYS: OK",
+      "SCHEMA: VALID",
+      "MUTATION: LOCKED"
+    ];
+    
+    // Assign labels to specific particles on the side
+    const labeledParticles = [10, 25, 40, 55, 70, 85, 95, 105];
+
+    let rotX = 0;
+    let rotY = 0;
+    let rotZ = 0;
+
+    function animateParticles(time) {
       ctx.clearRect(0, 0, width, height);
 
-      // Ease mouse coordinates
-      if (mouse.targetX !== null && mouse.targetY !== null) {
-        if (mouse.x === null) {
-          mouse.x = mouse.targetX;
-          mouse.y = mouse.targetY;
-        } else {
-          mouse.x += (mouse.targetX - mouse.x) * 0.1;
-          mouse.y += (mouse.targetY - mouse.y) * 0.1;
-        }
-      } else {
-        mouse.x = null;
-        mouse.y = null;
-      }
+      // Smoothly ease mouse coordinates
+      mouse.x += (mouse.targetX - mouse.x) * 0.08;
+      mouse.y += (mouse.targetY - mouse.y) * 0.08;
 
-      // Update & Draw Particles
-      particles.forEach((p, idx) => {
-        p.x += p.vx;
-        p.y += p.vy;
+      const centerX = width / 2;
+      const centerY = height / 2 - 20;
 
-        // Bounce check
-        if (p.x < 0 || p.x > width) p.vx *= -1;
-        if (p.y < 0 || p.y > height) p.vy *= -1;
+      // Base rotation + interactive mouse tilting
+      const targetRotX = (mouse.y - height / 2) * 0.0006;
+      const targetRotY = (mouse.x - width / 2) * 0.0006;
+      
+      rotX += (targetRotX - rotX) * 0.05 + 0.0015;
+      rotY += (targetRotY - rotY) * 0.05 + 0.0025;
+      rotZ += 0.0008;
 
-        // Magnet attraction to mouse
-        if (mouse.x !== null && mouse.y !== null) {
-          const dx = mouse.x - p.x;
-          const dy = mouse.y - p.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 200) {
-            p.x += dx * 0.003;
-            p.y += dy * 0.003;
-          }
-        }
+      // Projection parameters
+      const d = 400; // Camera distance
 
+      // Project particles in 3D
+      const projected = particles.map(p => {
+        // Pulse radius slightly for dynamic breathing effect
+        p.pulsePhase += p.pulseSpeed;
+        const pulse = 1 + Math.sin(p.pulsePhase) * 0.03;
+        
+        let x = p.baseX * sphereRadius * pulse;
+        let y = p.baseY * sphereRadius * pulse;
+        let z = p.baseZ * sphereRadius * pulse;
+
+        // Rotate X
+        let cosX = Math.cos(rotX), sinX = Math.sin(rotX);
+        let y1 = y * cosX - z * sinX;
+        let z1 = y * sinX + z * cosX;
+
+        // Rotate Y
+        let cosY = Math.cos(rotY), sinY = Math.sin(rotY);
+        let x2 = x * cosY - z1 * sinY;
+        let z2 = x * sinY + z1 * cosY;
+
+        // Rotate Z
+        let cosZ = Math.cos(rotZ), sinZ = Math.sin(rotZ);
+        let x3 = x2 * cosZ - y1 * sinZ;
+        let y3 = x2 * sinZ + y1 * cosZ;
+
+        // Perspective Projection
+        const scale = d / (d + z2);
+        const sx = centerX + x3 * scale;
+        const sy = centerY + y3 * scale;
+
+        return { sx, sy, zDepth: z2, scale, visible: sx >= 0 && sx <= width && sy >= 0 && sy <= height };
+      });
+
+      // Draw 3D Telemetry HUD Circles (Jarvis Dials)
+      const ringRadii = [sphereRadius * 1.15, sphereRadius * 1.3, sphereRadius * 1.45];
+      ringRadii.forEach((r, idx) => {
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = p.color;
-        ctx.fill();
+        const steps = 60;
+        const speedMultiplier = idx % 2 === 0 ? 1 : -1.2;
+        const angleOffset = (time * 0.0004) * speedMultiplier;
+        
+        for (let i = 0; i <= steps; i++) {
+          const theta = (i / steps) * Math.PI * 2 + angleOffset;
+          let x = Math.cos(theta) * r;
+          let z = Math.sin(theta) * r;
+          let y = 0;
 
-        // Connect lines
-        for (let j = idx + 1; j < particles.length; j++) {
-          const p2 = particles[j];
-          const dx = p.x - p2.x;
-          const dy = p.y - p2.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
+          // Tilts the ring slightly on X-Y-Z
+          const tiltX = 0.4 * (idx - 1);
+          const tiltY = 0.3 * (idx - 1);
+          
+          // Apply tilts/rotations
+          let cosTX = Math.cos(rotX + tiltX), sinTX = Math.sin(rotX + tiltX);
+          let y1 = y * cosTX - z * sinTX;
+          let z1 = y * sinTX + z * cosTX;
 
-          if (dist < maxDistance) {
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(p2.x, p2.y);
-            const alpha = (1 - dist / maxDistance) * 0.12;
-            ctx.strokeStyle = `rgba(217, 232, 227, ${alpha})`;
-            ctx.lineWidth = 0.8;
-            ctx.stroke();
-          }
+          let cosTY = Math.cos(rotY + tiltY), sinTY = Math.sin(rotY + tiltY);
+          let x2 = x * cosTY - z1 * sinTY;
+          let z2 = x * sinTY + z1 * cosTY;
+
+          const scale = d / (d + z2);
+          const sx = centerX + x2 * scale;
+          const sy = centerY + y1 * scale;
+
+          if (i === 0) ctx.moveTo(sx, sy);
+          else ctx.lineTo(sx, sy);
         }
-
-        // Draw connections to mouse
-        if (mouse.x !== null && mouse.y !== null) {
-          const dx = p.x - mouse.x;
-          const dy = p.y - mouse.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 150) {
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(mouse.x, mouse.y);
-            const alpha = (1 - dist / 150) * 0.18;
-            ctx.strokeStyle = `rgba(255, 200, 1, ${alpha})`;
-            ctx.lineWidth = 0.8;
-            ctx.stroke();
-          }
+        
+        // Custom styling for Jarvis HUD rings
+        if (idx === 0) {
+          ctx.strokeStyle = 'rgba(217, 232, 226, 0.06)';
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        } else if (idx === 1) {
+          // Dash style
+          ctx.strokeStyle = 'rgba(255, 200, 1, 0.08)';
+          ctx.lineWidth = 1.2;
+          ctx.setLineDash([4, 12]);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        } else {
+          // Subtle outer coordinate boundary
+          ctx.strokeStyle = 'rgba(17, 76, 90, 0.1)';
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
         }
       });
 
-      requestAnimationFrame(animateParticles);
+      // Draw Connections (Mesh lines)
+      connections.forEach(([i, j]) => {
+        const p1 = projected[i];
+        const p2 = projected[j];
+
+        if (p1.visible && p2.visible) {
+          // Opacity based on average depth (Z coordinate)
+          const avgDepth = (p1.zDepth + p2.zDepth) / 2;
+          // Normalize depth from sphereRadius (front) to -sphereRadius (back)
+          let alpha = (1 - (avgDepth + sphereRadius) / (sphereRadius * 2)) * 0.15;
+          if (alpha < 0.01) return;
+
+          ctx.beginPath();
+          ctx.moveTo(p1.sx, p1.sy);
+          ctx.lineTo(p2.sx, p2.sy);
+          ctx.strokeStyle = `rgba(217, 232, 226, ${alpha})`;
+          ctx.lineWidth = 0.6;
+          ctx.stroke();
+        }
+      });
+
+      // Draw Particles (Nodes)
+      projected.forEach((p, idx) => {
+        if (!p.visible) return;
+
+        // Scale opacity based on depth
+        let alpha = (1 - (p.zDepth + sphereRadius) / (sphereRadius * 2)) * 0.55;
+        if (alpha < 0.05) return;
+
+        ctx.beginPath();
+        const size = (p.scale * 2.5) * (1 - (p.zDepth + sphereRadius) / (sphereRadius * 2.5));
+        ctx.arc(p.sx, p.sy, Math.max(0.5, size), 0, Math.PI * 2);
+        
+        // Alternate colors for node accents
+        if (idx % 8 === 0) {
+          ctx.fillStyle = `rgba(255, 200, 1, ${alpha + 0.25})`; // Forsythia gold node
+        } else if (idx % 12 === 0) {
+          ctx.fillStyle = `rgba(255, 154, 50, ${alpha + 0.25})`; // Deep Saffron node
+        } else {
+          ctx.fillStyle = `rgba(217, 232, 226, ${alpha})`; // Mystic mint node
+        }
+        ctx.fill();
+
+        // Draw HUD scan telemetry labels (Jarvis overlays)
+        const labelIdx = labeledParticles.indexOf(idx);
+        if (labelIdx !== -1 && !isMobile) {
+          const text = telemetryTexts[labelIdx];
+          const isRight = p.sx > centerX;
+          const lineLength = 40;
+          const textOffset = isRight ? 8 : -8;
+          
+          ctx.beginPath();
+          ctx.moveTo(p.sx, p.sy);
+          
+          const endX = p.sx + (isRight ? lineLength : -lineLength);
+          ctx.lineTo(endX, p.sy);
+          ctx.strokeStyle = `rgba(255, 200, 1, ${alpha * 0.6})`;
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
+
+          // Draw the telemetry text label
+          ctx.font = '7.5px monospace';
+          ctx.fillStyle = `rgba(255, 200, 1, ${alpha * 0.85})`;
+          ctx.textAlign = isRight ? 'left' : 'right';
+          ctx.fillText(text, endX + textOffset, p.sy + 2.5);
+        }
+      });
+
+      // Draw horizontal sweeping scanner line (Jarvis laser)
+      const sweepY = centerY + Math.sin(time * 0.0015) * sphereRadius;
+      ctx.beginPath();
+      ctx.moveTo(centerX - sphereRadius * 1.1, sweepY);
+      ctx.lineTo(centerX + sphereRadius * 1.1, sweepY);
+      const sweepGradient = ctx.createLinearGradient(centerX - sphereRadius, 0, centerX + sphereRadius, 0);
+      sweepGradient.addColorStop(0, 'rgba(255, 200, 1, 0)');
+      sweepGradient.addColorStop(0.5, 'rgba(255, 200, 1, 0.16)');
+      sweepGradient.addColorStop(1, 'rgba(255, 200, 1, 0)');
+      ctx.strokeStyle = sweepGradient;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      requestAnimationFrame((t) => animateParticles(t));
     }
-    requestAnimationFrame(animateParticles);
+    requestAnimationFrame((t) => animateParticles(t));
   }
 
   /* ==========================================================================

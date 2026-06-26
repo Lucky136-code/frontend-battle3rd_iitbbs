@@ -551,4 +551,46 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initial Sync
   syncActiveFeature();
+
+  /* ==========================================================================
+     Scroll-Triggered Section Themes & Navigation Sync
+     ========================================================================== */
+  const sections = document.querySelectorAll('section[id]');
+  const scrollDots = document.querySelectorAll('.scroll-dot');
+
+  const observerOptions = {
+    root: null,
+    rootMargin: '-20% 0px -30% 0px',
+    threshold: 0
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.getAttribute('id');
+        
+        // Remove all previous active states from body
+        document.body.className = document.body.className
+          .split(' ')
+          .filter(c => !c.startsWith('active-section-'))
+          .join(' ');
+        
+        // Add current active section class to body
+        document.body.classList.add(`active-section-${id}`);
+        
+        // Update active class on scroll-nav dots
+        scrollDots.forEach(dot => {
+          if (dot.getAttribute('data-section') === id) {
+            dot.classList.add('active');
+          } else {
+            dot.classList.remove('active');
+          }
+        });
+      }
+    });
+  }, observerOptions);
+
+  sections.forEach(section => {
+    observer.observe(section);
+  });
 });

@@ -1592,3 +1592,145 @@ footer {
     text-align: center;
   }
 }
+
+/* Floating Scroll Navigation */
+.scroll-nav {
+  position: fixed;
+  right: 28px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  z-index: 90;
+}
+
+.scroll-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(241, 245, 244, 0.2);
+  border: 1px solid rgba(217, 232, 226, 0.1);
+  position: relative;
+  transition: background-color 200ms var(--ease-micro), transform 200ms var(--ease-micro);
+  text-decoration: none;
+}
+
+.scroll-dot:hover, .scroll-dot.active {
+  background: var(--forsythia);
+  transform: scale(1.3);
+}
+
+.dot-label {
+  position: absolute;
+  right: 22px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+  font-size: 0.725rem;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 200ms var(--ease-micro);
+  white-space: nowrap;
+}
+
+.scroll-dot:hover .dot-label, .scroll-dot.active .dot-label {
+  opacity: 1;
+}
+
+/* Background Cyber Grid Pattern */
+.bg-grid-overlay {
+  position: fixed;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(217, 232, 226, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(217, 232, 226, 0.015) 1px, transparent 1px);
+  background-size: 44px 44px;
+  background-position: center;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 800ms var(--ease-micro);
+}
+
+/* Dynamic Section Background Animations */
+body {
+  transition: background-color 800ms var(--ease-micro);
+}
+
+.glow-orb {
+  transition: transform 1200ms var(--ease-layout), opacity 1200ms var(--ease-layout), background 1200ms var(--ease-layout);
+}
+
+/* State changes driven by JS Intersection Observer */
+body.active-section-hero .glow-orb-1 {
+  transform: translate(0px, 0px) scale(1);
+}
+body.active-section-hero .glow-orb-2 {
+  transform: translate(0px, 0px) scale(1);
+}
+body.active-section-hero .bg-grid-overlay {
+  opacity: 0.2;
+}
+
+body.active-section-features {
+  background-color: #0d1e26;
+}
+body.active-section-features .glow-orb-1 {
+  transform: translate(-100px, 200px) scale(1.2);
+}
+body.active-section-features .glow-orb-2 {
+  transform: translate(100px, -200px) scale(0.8);
+}
+body.active-section-features .bg-grid-overlay {
+  opacity: 0.65; /* Grid becomes highly visible under Bento Grid! */
+}
+
+body.active-section-pricing {
+  background-color: #122129;
+}
+body.active-section-pricing .glow-orb-1 {
+  transform: translate(150px, 400px) scale(0.9);
+}
+body.active-section-pricing .glow-orb-2 {
+  transform: translate(-150px, 100px) scale(1.3);
+}
+body.active-section-pricing .bg-grid-overlay {
+  opacity: 0.15;
+}
+
+body.active-section-testimonials {
+  background-color: #0e1d24;
+}
+body.active-section-testimonials .glow-orb-1 {
+  transform: translate(-50px, 500px) scale(1.1);
+}
+body.active-section-testimonials .glow-orb-2 {
+  transform: translate(50px, 300px) scale(0.9);
+}
+body.active-section-testimonials .bg-grid-overlay {
+  opacity: 0.3;
+}
+
+body.active-section-demo {
+  background-color: #0a1418; /* Black out for video focus */
+}
+body.active-section-demo .glow-orb-1 {
+  transform: translate(0, 400px) scale(1.4);
+  opacity: 0.25;
+}
+body.active-section-demo .glow-orb-2 {
+  opacity: 0.05;
+}
+body.active-section-demo .bg-grid-overlay {
+  opacity: 0.05;
+}
+
+@media (max-width: 768px) {
+  .scroll-nav {
+    display: none;
+  }
+}
